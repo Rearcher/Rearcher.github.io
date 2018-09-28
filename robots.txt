@@ -1,0 +1,13 @@
+User-agent: *
+Allow: /
+Allow: /archives/
+Allow: /categories/
+Allow: /tags/ 
+Disallow: /scripts/
+Disallow: /css/
+Disallow: /font/
+Disallow: /vendors/
+Disallow: /fancybox/
+
+Sitemap: https://rearcher.github.io/sitemap.xml
+Sitemap: https://rearcher.github.io/baidusitemap.xml

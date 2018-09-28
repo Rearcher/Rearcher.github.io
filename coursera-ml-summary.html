@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Rahul">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Rahul">
+    <meta name="keywords" content="Life's monolog | Rahul">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Andrew Ng《machine learning》小结 · Life&#39;s monolog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180721 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180721 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/r.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Life&#39;s monolog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">Andrew Ng《machine learning》小结</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Life's monolog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/my-index-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            Andrew Ng《machine learning》小结
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "coursera">coursera</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">4,748</span> / Reading time: <span class="post-count">17 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2018/04/01</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>花了两周时间学完了吴恩达的机器学习课程，做完了所有作业。虽然编程作业大多是照着公式写代码，框架都给你搭好，几乎是保姆式的服务，但还是或多或少有所收获。因为有点基础，所以看得比较快，十一周的课程只花了两周的时间。总的来说还是值得一看，涉及到了很多方面，在此做个小结。<br><a id="more"></a></p>
+<h2 id="线性回归"><a href="#线性回归" class="headerlink" title="线性回归"></a>线性回归</h2><h3 id="基本形式"><a href="#基本形式" class="headerlink" title="基本形式"></a>基本形式</h3><p>线性回归基本形式：</p>
+<script type="math/tex; mode=display">h_\theta (x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 + \cdots + \theta_n x_n</script><p>其中$ \theta $代表参数， $ \theta_0 $就是通常说的偏置bias。$ x_n $代表特征，如果$ n = 1 $，则是一元线性回归；$ n &gt; 1 $时是多元线性回归。线性回归可以很方便地改成多项式回归，只需要把特征$ x_n $变换成对应的多项式特征即可。因此掌握了最基本的一元线性回归，就掌握了多元线性回归、多项式回归。</p>
+<p>在实际实现中，常常采取如下的向量化:</p>
+<script type="math/tex; mode=display">h_\theta(X) = X \theta</script><p>其中$ X $代表的是训练数据，并且每个训练数据是一行。假设每条训练数据有n个特征（包含$x_0$），总共有m条训练数据，那么$ X $就是$m \times n$的矩阵。$ \theta $代表的是参数矩阵，因为训练数据有n个特征，所以$ \theta $是$n \times 1$的列向量。</p>
+<h3 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h3><p>线性回归的损失函数是平方损失，定义如下所示：</p>
+<script type="math/tex; mode=display">J(\theta) = \dfrac {1}{2m} \displaystyle \sum_{i=1}^m \left (h_\theta (x^{(i)}) - y^{(i)} \right)^2</script><p>一个直观的解释是，线性回归的损失函数计算的是预测点到实际点的距离的平方和。至于为什么要除以2，是因为在计算损失函数偏导的时候，会乘以2，所以刚好能够抵消，最后系数只剩下 $\frac{1}{m}$。</p>
+<p>损失函数的向量化形式如下：</p>
+<script type="math/tex; mode=display">J(\theta) = \dfrac {1}{2m} (X\theta - \vec{y})^{T} (X\theta - \vec{y})</script><p>这里又提到了向量化，向量化的意义在于用向量的形式实现，就可以使用矩阵来进行运算，相比于普通的循环来说更加高效，特别是当数据量很大的时候。</p>
+<h3 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h3><p>模型训练就是拟合模型参数的过程，线性回归有两种求解模型参数的办法，一种是将问题转化为损失函数最小化，通过梯度下降法来不断更新要求的参数，使损失函数达到最优；另一种是用<strong>Normal Equation</strong>直接求出。</p>
+<p>梯度下降法就是对损失函数求每个参数$\theta_j$的偏导，偏导就称为梯度，然后通过将当前的$\theta_j$减去其梯度的这种方式来更新参数，直至算法收敛（算法收敛的条件可以是损失函数的值小于某个值）。公式如下：</p>
+<script type="math/tex; mode=display">\theta_j := \theta_j - \alpha \frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)}</script><p>其中$\alpha$是学习率，$\frac{1}{m} \sum\limits_{i=1}^{m} (h_\theta(x^{(i)}) - y^{(i)}) \cdot x_j^{(i)}$就是$\theta_j$对应的梯度。所以梯度下降法是一个迭代的算法，每轮迭代同时更新所有参数；另外还需要注意学习率$\alpha$的选择，$\alpha$太大的话，可能导致算法不收敛，$\alpha$太小可能导致迭代次数过多，算法收敛慢。</p>
+<p>下面是梯度下降法的向量化形式：</p>
+<script type="math/tex; mode=display">\theta := \theta - \frac{\alpha}{m} X^{T} (X\theta - \vec{y})</script><p><strong>Normal Equation</strong>也是求解线性回归参数的一种方法，方程如下：</p>
+<script type="math/tex; mode=display">\theta = (X^T X)^{-1}X^T y</script><p>相比于梯度下降法，不需要迭代，也不需要选择学习率$\alpha$，只需要对矩阵求逆。当特征数量很少时，可以采用<strong>Normal Equation</strong>的方式，更加直接；当特征数量很大时，矩阵求逆会耗费大量的时间，采用梯度下降法更佳。另外，使用<strong>Normal Equation</strong>时，可能出现矩阵$X^T X$不可逆的情况，可能的原因是存在多余的特征，特征与特征之间依赖比较严重，例如线性相关；或者特征数太多，远大于样本数量，此时应当删去不必要的特征或者采取正则化（Regularization）。</p>
+<p><strong>Normal Equation</strong>的推导过程可见<a href="http://eli.thegreenplace.net/2014/derivation-of-the-normal-equation-for-linear-regression" target="_blank" rel="noopener">这里</a>。</p>
+<h3 id="特征归一化"><a href="#特征归一化" class="headerlink" title="特征归一化"></a>特征归一化</h3><p>特征归一化（Normalization）主要是为了加速梯度下降算法，能够减少梯度下降法的迭代次数。</p>
+<script type="math/tex; mode=display">x_i := \dfrac{x_i - \mu_i}{s_i}</script><p>其中$x_i$是原始的特征，$\mu_i$是特征$x_i$的均值，$s_i$是$x_i$的范围，实际情况中也用$x_i$的标准差来替代$s_i$。</p>
+<h2 id="逻辑回归"><a href="#逻辑回归" class="headerlink" title="逻辑回归"></a>逻辑回归</h2><h3 id="基本形式-1"><a href="#基本形式-1" class="headerlink" title="基本形式"></a>基本形式</h3><p>逻辑回归（Logistic Regression）虽然名字上带了“回归”，但主要用于二分类问题。逻辑回归函数的输出是一个处于0-1之间的值，代表输出是1的概率。<br>\begin{align}&amp; h_\theta(x) = P(y=1 | x ; \theta) = 1 - P(y=0 | x ; \theta) \newline&amp; P(y = 0 | x;\theta) + P(y = 1 | x ; \theta) = 1\end{align}</p>
+<p>基本形式如下：<br>\begin{align}&amp; h_\theta (x) =  g ( \theta^T x ) \newline \newline&amp; z = \theta^T x \newline&amp; g(z) = \dfrac{1}{1 + e^{-z}}\end{align}</p>
+<p>可以看到逻辑回归其实就是在线性回归上套了一个$g$函数，也称为Sigmoid函数，形式如下图：<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy310ss7lj30my03k74g.jpg" alt="sigmoid"></p>
+<p>可以看到，当$z$的值大于0的时候，$g(z)$是大于0.5的，当$z$小于0时，$g(z)$是小于0.5的。所以如果假设$h_\theta(x) \geq 0.5$时有$y = 1$（即当输出概率大于等于0.5时，判定为类别1），就等价于$\theta^T x \geq 0 \Rightarrow y = 1$。</p>
+<h3 id="损失函数-1"><a href="#损失函数-1" class="headerlink" title="损失函数"></a>损失函数</h3><p>逻辑回归的损失函数是基于最大似然估计推导得到的，推导可见<a href="https://blog.csdn.net/ZhikangFu/article/details/51315542" target="_blank" rel="noopener">这里</a>。</p>
+<script type="math/tex; mode=display">J(\theta) = - \frac{1}{m} \displaystyle \sum_{i=1}^m [y^{(i)}\log (h_\theta (x^{(i)})) + (1 - y^{(i)})\log (1 - h_\theta(x^{(i)}))]</script><p>这里损失函数的意义是度量分类错误的代价，当分类正确时，损失函数中对应的部分为0。损失函数的向量化形式：<br>\begin{align}<br>&amp; h = g(X\theta)\newline<br>&amp; J(\theta)  = \frac{1}{m} \cdot \left(-y^{T}\log(h)-(1-y)^{T}\log(1-h)\right)<br>\end{align}</p>
+<h3 id="模型训练-1"><a href="#模型训练-1" class="headerlink" title="模型训练"></a>模型训练</h3><p>采用梯度下降法，本质上也是对损失函数求偏导，迭代如下：</p>
+<script type="math/tex; mode=display">\theta_j := \theta_j - \frac{\alpha}{m} \sum_{i=1}^m (h_\theta(x^{(i)}) - y^{(i)}) x_j^{(i)}</script><p>向量化形式如下：</p>
+<script type="math/tex; mode=display">\theta := \theta - \frac{\alpha}{m} X^{T} (g(X \theta ) - \vec{y})</script><h3 id="多分类"><a href="#多分类" class="headerlink" title="多分类"></a>多分类</h3><p>由于逻辑回归是用于二分类问题，当需要应用到多分类问题时，采用的是OneVsAll策略，即对于某一类，训练其与其他类的分类器，所以n类需要训练n个分类器。</p>
+<h3 id="正则化"><a href="#正则化" class="headerlink" title="正则化"></a>正则化</h3><p>正则化（Regularization）主要用来过拟合问题，通常的做法是在损失函数上增加一项关于参数$\theta$的惩罚项。带正则化的逻辑回归损失函数如下：</p>
+<script type="math/tex; mode=display">J(\theta) = - \frac{1}{m} \sum_{i=1}^m \large[ y^{(i)}\ \log (h_\theta (x^{(i)})) + (1 - y^{(i)})\ \log (1 - h_\theta(x^{(i)}))\large] + \frac{\lambda}{2m}\sum_{j=1}^n \theta_j^2</script><p>其中$ \frac{\lambda}{2m}\sum_{j=1}^n \theta_j^2$就是惩罚项，$\lambda$是正则化系数。当$\lambda$过大时，可能造成模型欠拟合。当损失函数带有正则化时，梯度下降时对损失函数求偏导也会带有惩罚项，但需要注意不对$\theta_0$进行惩罚。</p>
+<h2 id="神经网络"><a href="#神经网络" class="headerlink" title="神经网络"></a>神经网络</h2><h3 id="基本形式-2"><a href="#基本形式-2" class="headerlink" title="基本形式"></a>基本形式</h3><p>神经网络由神经元组成，单个的神经元的作用是通过若干个输入来输出一个值，如下图所示。通常会添加一个偏置单元bias作为输入。每条输入边上都有相应的参数$\theta$，神经元上有一个激活函数（课程中采用的是sigmoid函数），因此这里$h_\theta(x) = sigmoid(\theta^TX)$。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy2wsb343j31vk10itju.jpg" alt="neuron"></p>
+<p>神经网络由多层神经元组成，每层神经元的数量不等。基本的神经网络由输入层和输出层组成，输入层神经元的个数与特征数量相同，输出层神经元的个数与求解的具体问题相关，如果求解一个二分类问题，输出层的神经元个数就是2个。处于输入层和输出层之间网络层称之为隐层（Hidden Layer）。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy2wsf1g2j31sg11a4d5.jpg" alt="neural_network"></p>
+<p>神经网络求最后输出层的值采用的是前向传播算法，从前往后分别计算每一层每一个神经元上的值（用前一层神经元的输出值以及对应的权重和神经元上的激活函数来计算）。</p>
+<h3 id="损失函数-2"><a href="#损失函数-2" class="headerlink" title="损失函数"></a>损失函数</h3><p>神经网络的损失函数与逻辑回归的损失函数类似，不过需要考虑网络每条边上的权重。具体形式如下：</p>
+<script type="math/tex; mode=display">J(\Theta) = - \frac{1}{m} \sum_{i=1}^m \sum_{k=1}^K \left[y^{(i)}_k \log ((h_\Theta (x^{(i)}))_k) + (1 - y^{(i)}_k)\log (1 - (h_\Theta(x^{(i)}))_k)\right] + \frac{\lambda}{2m}\sum_{l=1}^{L-1} \sum_{i=1}^{s_l} \sum_{j=1}^{s_{l+1}} ( \Theta_{j,i}^{(l)})^2</script><p>反向传播算法是用来最小化神经网络损失函数的一种算法，其本质上也是对损失函数求每条边上参数$\theta$的偏导，不过其采取从后往前一层一层计算的方式。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy2ws5ui1j31uw10qdto.jpg" alt="bp_1"><br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy2wrv0uwj31sw10atkb.jpg" alt="bp_2"></p>
+<blockquote>
+<p>训练神经网络的一般步骤：</p>
+<ol>
+<li>随机初始化所有参数。如果将参数初值都设为0，当反向传播时，那么所有节点的更新值都会变成一样，所以一般采用随机初始化的形式；</li>
+<li>采用前向算法计算每一层神经元的输出值；</li>
+<li>实现计算损失和用反向传播计算偏导的函数；</li>
+<li>检查反向传播算法是否正常工作；</li>
+<li>用梯度下降或者成熟的优化器来优化损失函数，例如在octave中用fmincg来函数优化损失函数，只需要传入计算损失和梯度的函数。</li>
+</ol>
+</blockquote>
+<h2 id="应用机器学习的一些建议"><a href="#应用机器学习的一些建议" class="headerlink" title="应用机器学习的一些建议"></a>应用机器学习的一些建议</h2><blockquote>
+<ol>
+<li>将训练数据分为训练集、交叉验证集、测试集。用训练集来训练模型，交叉验证集来测试模型的性能，测试集来测试模型的泛化能力；</li>
+<li>解决欠拟合：增加特征数量，增加多项式特征，降低正则化系数$\lambda$；</li>
+<li>解决过拟合：增加训练数据，尝试更少的特征，增加正则化系数$\lambda$；</li>
+<li>对于二分类问题，当正负样本数不均衡时，采用精确度accuracy来度量模型的性能是不合理的，此时应该采取准确率precision、召回率recall、F1。</li>
+</ol>
+</blockquote>
+<h2 id="支持向量机"><a href="#支持向量机" class="headerlink" title="支持向量机"></a>支持向量机</h2><h3 id="基本形式-3"><a href="#基本形式-3" class="headerlink" title="基本形式"></a>基本形式</h3><p>支持向量机要求函数输出0或者1，而不像逻辑回归是概率。</p>
+<script type="math/tex; mode=display">h_\theta(x) =\begin{cases}    1 & \text{if} \ \Theta^Tx \geq 0 \\    0 & \text{otherwise}\end{cases}</script><h3 id="损失函数-3"><a href="#损失函数-3" class="headerlink" title="损失函数"></a>损失函数</h3><p>课程中通过逻辑回归的损失函数引出支持向量机的损失函数。对于逻辑回归，如果$y = 1$，要求$\theta^TX \geq 0$，而支持向量机则要求$\theta^TX \gg 0$。基于此，对逻辑回归的损失函数进行一定改变，就得到了支持向量机的损失函数。</p>
+<script type="math/tex; mode=display">J(\theta) = C\sum_{i=1}^m y^{(i)} \ \text{cost}_1(\theta^Tx^{(i)}) + (1 - y^{(i)}) \ \text{cost}_0(\theta^Tx^{(i)}) + \dfrac{1}{2}\sum_{j=1}^n \Theta^2_j</script><p>损失函数中的$C$是支持向量机的正则化系数，其作用相当于$\frac{1}{\lambda}$。支持向量机寻找能够区分不同类别样本点的最佳决策边界，最佳决策边界到最近的样本点的距离称为间隔，由于支持向量机的本质是最大化这个间隔，所以又称为最大间隔分类器。最大间隔只有当C很大时才会取得，如果存在某些异常点并且我们不想让这些异常点影响最大间隔的决策边界，可以适当减少C。</p>
+<h3 id="核函数"><a href="#核函数" class="headerlink" title="核函数"></a>核函数</h3><p>不采用核函数的支持向量机（也称为采用线性核linear kernel的支持向量机）对于线性可分数据具有较好的性能，如果数据线性不可分，可以采用核函数来实现非线性支持向量机。所谓核函数，是指某种相似度函数。Andrew Ng对于于核函数的解释非常直观，在输入空间中选取几个代表性的点，将原始特征转化成与这几个代表性的点的相似度的向量作为新的特征，然后用新的特征来最小化损失函数。这样做的效果最后就是，决策边界在这几个代表性的点附近会弯曲，形成非线性的决策面。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy2wrnthgj31t0120n3l.jpg" alt="kernel_1"><br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy2wrxg9vj31wi11ik04.jpg" alt="kernel_2"><br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy2wry9unj31xy11awpa.jpg" alt="kernel_3"></p>
+<p>课程中提到的一个核函数是高斯核函数（Gaussian），其有个$\sigma^2$参数需要设置，$\sigma^2$太大会导致新特征变化缓慢，容易造成欠拟合；$\sigma^2$过小会导致新特征变化剧烈，容易造成过拟合。所以$\sigma^2$的作用与$C$相反，与$\lambda$相同。如果使用高斯核，建议对特征进行归一化。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy2wsvee7j31rw11g7pi.jpg" alt="gaussin_kernel_sigma"></p>
+<p>接着上面说，实际使用过程中，对于有代表性的点的选取，常常是选择所有的输入数据。所以新的特征维数n与之前的训练数据量m相同。关于逻辑回归和支持向量机使用：</p>
+<blockquote>
+<ol>
+<li>如果n远大于m，例如$n=10000$，$m = 100$，建议采用逻辑回归或者线性核支持向量机；</li>
+<li>如果n很小，m也不大，例如$n = 100$， $m = 1000$，建议使用带高斯核的支持向量机；</li>
+<li>如果n很小，m很大，例如$n = 100$， $m = 50000+$，建议增加更多特征，然后采用逻辑回归或者线性核支持向量机。</li>
+</ol>
+</blockquote>
+<h2 id="非监督学习"><a href="#非监督学习" class="headerlink" title="非监督学习"></a>非监督学习</h2><p>主要介绍了聚类方法k-means和降维方法PCA。</p>
+<h3 id="k-means"><a href="#k-means" class="headerlink" title="k-means"></a>k-means</h3><p>k-means主要分为两步：</p>
+<blockquote>
+<ol>
+<li>随机选取k个中心点；</li>
+<li>将所有的数据点归类到与其距离最近的某个中心点，然后更新每一类的中心点。</li>
+</ol>
+</blockquote>
+<h3 id="PCA"><a href="#PCA" class="headerlink" title="PCA"></a>PCA</h3><p>PCA是将高维数据映射到低维的方法，其步骤如下：</p>
+<blockquote>
+<ol>
+<li>计算协方差矩阵$\Sigma = \dfrac{1}{m}\sum^m_{i=1}(x^{(i)})(x^{(i)})^T$；</li>
+<li>计算协方差矩阵的特征向量；</li>
+<li>选取前k个特征向量，组成$n \times k$的矩阵$Ureduce$，对于某个原始特征数据$x^{(i)}$，其降维后的特征$z^{(i)} = Ureduce^T \cdot x^{(i)}$</li>
+</ol>
+</blockquote>
+<p>所以PCA的本质是将高维特征通过某个投影矩阵投影到低维。</p>
+<p>原始特征的还原：$x_{approx}^{(i)} = U_{reduce} \cdot z^{(i)}$</p>
+<p>如何选取k的值来构建投影矩阵？这里定义平方投影误差为$\dfrac{1}{m}\sum^m_{i=1}||x^{(i)} - x_{approx}^{(i)}||^2$，选择最小的k满足如下条件：</p>
+<script type="math/tex; mode=display">\dfrac{\dfrac{1}{m}\sum^m_{i=1}||x^{(i)} - x_{approx}^{(i)}||^2}{\dfrac{1}{m}\sum^m_{i=1}||x^{(i)}||^2} \leq 0.01</script><p>但这种方式计算非常缓慢，对于某个k，需要计算所有的还原后的特征向量。现实实现中常常采取如下方式：</p>
+<script type="math/tex; mode=display">\dfrac{\sum_{i=1}^kS_{ii}}{\sum_{i=1}^nS_{ii}} \geq 0.99</script><p>其中$S_{ii}$是矩阵$S$里的值，而矩阵S在octave中可以通过如下代码求出：<br><figure class="highlight matlab"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[U,S,V] = svd(Sigma)</span><br></pre></td></tr></table></figure></p>
+<p>PCA主要的用处是对特征数据进行降维处理。或者将高维数据映射到2维或者3维使其易于可视化。不要将PCA用来解决过拟合问题，并且不要一开始就对特征进行降维处理，应该先尝试原始特征的效果。</p>
+<h2 id="异常检测"><a href="#异常检测" class="headerlink" title="异常检测"></a>异常检测</h2><p>异常检测（Anomaly Detection）是为了检测出数据中的异常点。这里我们定义一个模型$p(x)$来告诉我们一个样本是正常样本的概率，然后用一个阈值$\epsilon$来区分正常样本和异常样本（$p(x) &lt; \epsilon$）。</p>
+<p>我们假设特征符合高斯分布。课程中提到了两种，一种是对于特征的每一维，都符合一个一维高斯分布；另一种是多维特征符合一个多维高斯分布。多维高斯分布相比于多个一维高斯分布，能够自动地捕捉到特征之间的联系，但计算量较大。然后根据训练数据来估计高斯分布的均值和方差。对于样本点$x$，只需计算其在估计出的模型$p(x)$上的值，并与$\epsilon$比较即可。</p>
+<h2 id="推荐系统"><a href="#推荐系统" class="headerlink" title="推荐系统"></a>推荐系统</h2><p>关于推荐系统介绍了协同过滤算法。假设我们的推荐系统要用于电影的推荐，那么关于电影其实可以用一个特征向量$x$来表述，例如<code>[动作，爱情，悬疑，恐怖]</code>等，然后用户对电影的喜爱其实是由一个参数向量$\theta$决定的，这样就可以根据评分数据在已知电影特征向量的情况下，为每个用户拟合一个线性回归模型，估计出每个用户的参数向量$\theta$，这就是<strong>基于内容的推荐系统</strong>。即最小化如下损失函数：</p>
+<script type="math/tex; mode=display">min_{\theta^{(1)},\dots,\theta^{(n_u)}} = \dfrac{1}{2}\displaystyle \sum_{j=1}^{n_u}  \sum_{i:r(i,j)=1} ((\theta^{(j)})^T(x^{(i)}) - y^{(i,j)})^2 + \dfrac{\lambda}{2} \sum_{j=1}^{n_u} \sum_{k=1}^n(\theta_k^{(j)})^2</script><p>然而很多时候，电影的特征其实不是很好定义，一部电影的动作值是多少？爱情值是多少？这时候可以采用<strong>基于用户的推荐系统</strong>， 给出用户的参数向量$\theta$（即用户对动作电影的喜欢程度是多少，对爱情电影的喜欢程度是多少等），来拟合电影的特征数据，即最小化如下损失函数：</p>
+<script type="math/tex; mode=display">min_{x^{(1)},\dots,x^{(n_m)}} \dfrac{1}{2} \displaystyle \sum_{i=1}^{n_m}  \sum_{j:r(i,j)=1} ((\theta^{(j)})^T x^{(i)} - y^{(i,j)})^2 + \dfrac{\lambda}{2}\sum_{i=1}^{n_m} \sum_{k=1}^{n} (x_k^{(i)})^2</script><p>而<strong>协同过滤算法</strong>，就是整合了基于内容的推荐系统和基于用户的推荐系统，同时求解用户参数$\theta$和电影特征$x$，其损失函数如下：</p>
+<script type="math/tex; mode=display">J(x,\theta) = \dfrac{1}{2} \displaystyle \sum_{(i,j):r(i,j)=1}((\theta^{(j)})^Tx^{(i)} - y^{(i,j)})^2 + \dfrac{\lambda}{2}\sum_{i=1}^{n_m} \sum_{k=1}^{n} (x_k^{(i)})^2 + \dfrac{\lambda}{2}\sum_{j=1}^{n_u} \sum_{k=1}^{n} (\theta_k^{(j)})^2</script><p>参数向量$\theta$和电影特征向量$x$的初始化可以采取随机值，在参数估计完之后，想要预测某用户$j$对某部没有看过电影$i$的评分，可以用$(\theta^{(j)})^T x^{(i)}$来获得。用于电影推荐的推荐系统，在具体实现时，常常对评分矩阵进行均值归一化（即对于每部电影的评分，减去所有用户对其评分的均值），这样对于某位一部电影都没看过的用户，会将其对其他电影的评分预测为平均分，而不全都预测为0分，预测时采用$(\theta^{(j)})^T x^{(i)} + \mu_i$公式来计算。</p>
+<h2 id="大规模机器学习"><a href="#大规模机器学习" class="headerlink" title="大规模机器学习"></a>大规模机器学习</h2><p>当训练数据量非常大时，传统的梯度下降法（批量梯度下降）会非常耗时，因为每次求梯度都需要遍历所有的训练数据，课程中介绍了两种替代方案：随机梯度下降和小批量梯度下降。</p>
+<h3 id="随机梯度下降"><a href="#随机梯度下降" class="headerlink" title="随机梯度下降"></a>随机梯度下降</h3><p>对样本进行随机排序，然后按序遍历样本，每次只用当前样本来计算梯度，进行梯度下降。</p>
+<blockquote>
+<p>对样本进行随机排序；<br>对于$i = 1 … m$，$\Theta_j := \Theta_j - \alpha (h_{\Theta}(x^{(i)}) - y^{(i)}) \cdot x^{(i)}_j$</p>
+</blockquote>
+<h3 id="小批量梯度下降"><a href="#小批量梯度下降" class="headerlink" title="小批量梯度下降"></a>小批量梯度下降</h3><p>每次只用小批量样本来计算梯度，假设小批量为10，算法如下：</p>
+<blockquote>
+<p>$For$  $i=1,11,21,31,…,991$<br>$\theta_j := \theta_j - \alpha \dfrac{1}{10} \displaystyle \sum_{k=i}^{i+9} (h_\theta(x^{(k)}) - y^{(k)})x_j^{(k)}$</p>
+</blockquote>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>洋洋洒洒写了这么多，也算是对课程的一个回顾吧。总的来说，这门课讲得比较形象，虽然涉及到很多公式，但并没有深入去讲公式如何推导等，而是侧重于阐述直观上的理解，非常适合入门。这篇博文虽然涉及到了很多方面，但很多也只是列个公式，并没有做深入的讲解，只是列了一些课程中提到的注意点，说再多也显得晦涩，感兴趣的读者不如直接去看课程的视频吧。</p>
+<p>后面准备开始动手实现一遍机器学习中的各种模型，加深对各个模型的理解，敬请期待！</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://rearcher.github.io">Rahul</a>
+            <p>原文链接: <a href="https://rearcher.github.io/coursera-ml-summary.html">https://rearcher.github.io/coursera-ml-summary.html</a>
+            <p>发表日期: <a href="https://rearcher.github.io/coursera-ml-summary.html">April 1st 2018, 3:35:27 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/linear_regression.html" title= 用python实现线性回归 >
+                    <div class="nextTitle">用python实现线性回归</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/solr-automation.html" title= 从Solr源码看自动机的实现 >
+                    <div class="prevTitle">从Solr源码看自动机的实现</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        
+        var disqus_config = function () {
+        this.page.url = "https://rearcher.github.io/coursera-ml-summary.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "Andrew Ng《machine learning》小结"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://rearcher-github-io.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mailto:huanhuan7719@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/rearcher" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <a href="https://weibo.com/u/5660138679" class="iconfont-archer weibo" target="_blank" title=weibo></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#线性回归"><span class="toc-number">1.</span> <span class="toc-text">线性回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本形式"><span class="toc-number">1.1.</span> <span class="toc-text">基本形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#损失函数"><span class="toc-number">1.2.</span> <span class="toc-text">损失函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模型训练"><span class="toc-number">1.3.</span> <span class="toc-text">模型训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#特征归一化"><span class="toc-number">1.4.</span> <span class="toc-text">特征归一化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#逻辑回归"><span class="toc-number">2.</span> <span class="toc-text">逻辑回归</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本形式-1"><span class="toc-number">2.1.</span> <span class="toc-text">基本形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#损失函数-1"><span class="toc-number">2.2.</span> <span class="toc-text">损失函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#模型训练-1"><span class="toc-number">2.3.</span> <span class="toc-text">模型训练</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#多分类"><span class="toc-number">2.4.</span> <span class="toc-text">多分类</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#正则化"><span class="toc-number">2.5.</span> <span class="toc-text">正则化</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#神经网络"><span class="toc-number">3.</span> <span class="toc-text">神经网络</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本形式-2"><span class="toc-number">3.1.</span> <span class="toc-text">基本形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#损失函数-2"><span class="toc-number">3.2.</span> <span class="toc-text">损失函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#应用机器学习的一些建议"><span class="toc-number">4.</span> <span class="toc-text">应用机器学习的一些建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#支持向量机"><span class="toc-number">5.</span> <span class="toc-text">支持向量机</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#基本形式-3"><span class="toc-number">5.1.</span> <span class="toc-text">基本形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#损失函数-3"><span class="toc-number">5.2.</span> <span class="toc-text">损失函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#核函数"><span class="toc-number">5.3.</span> <span class="toc-text">核函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非监督学习"><span class="toc-number">6.</span> <span class="toc-text">非监督学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#k-means"><span class="toc-number">6.1.</span> <span class="toc-text">k-means</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#PCA"><span class="toc-number">6.2.</span> <span class="toc-text">PCA</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#异常检测"><span class="toc-number">7.</span> <span class="toc-text">异常检测</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#推荐系统"><span class="toc-number">8.</span> <span class="toc-text">推荐系统</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#大规模机器学习"><span class="toc-number">9.</span> <span class="toc-text">大规模机器学习</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#随机梯度下降"><span class="toc-number">9.1.</span> <span class="toc-text">随机梯度下降</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小批量梯度下降"><span class="toc-number">9.2.</span> <span class="toc-text">小批量梯度下降</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">10.</span> <span class="toc-text">总结</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/interesting-knapsack-problem.html" >有趣的背包问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/bit-logn-range-update.html" >树状数组区间更新的O(logn)实现</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/24</span><a class="archive-post-title" href= "/naive_bayes.html" >用python实现朴素贝叶斯分类算法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/k_nearest_neighbors.html" >用python实现k近邻、kd树搜索</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/18</span><a class="archive-post-title" href= "/logistic_regression.html" >用python实现逻辑回归</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/linear_regression.html" >用python实现线性回归</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/coursera-ml-summary.html" >Andrew Ng《machine learning》小结</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/solr-automation.html" >从Solr源码看自动机的实现</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/netty-http-proxy.html" >基于Netty的HTTP代理服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/netease-interview.html" >网易面试小记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span><a class="archive-post-title" href= "/java-memory-management.html" >Java自动内存管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href= "/simple-java-thread-pool.html" >Java线程池的简单实现</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/myjvm.html" >我理解中的JVM</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="背包问题"><span class="iconfont-archer">&#xe606;</span>背包问题</span>
+    
+        <span class="sidebar-tag-name" data-tags="动态规划"><span class="iconfont-archer">&#xe606;</span>动态规划</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="机器学习"><span class="iconfont-archer">&#xe606;</span>机器学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="go"><span class="iconfont-archer">&#xe606;</span>go</span>
+    
+        <span class="sidebar-tag-name" data-tags="jvm"><span class="iconfont-archer">&#xe606;</span>jvm</span>
+    
+        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+    
+        <span class="sidebar-tag-name" data-tags="netty"><span class="iconfont-archer">&#xe606;</span>netty</span>
+    
+        <span class="sidebar-tag-name" data-tags="maven"><span class="iconfont-archer">&#xe606;</span>maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="solr"><span class="iconfont-archer">&#xe606;</span>solr</span>
+    
+        <span class="sidebar-tag-name" data-tags="automaton"><span class="iconfont-archer">&#xe606;</span>automaton</span>
+    
+        <span class="sidebar-tag-name" data-tags="coursera"><span class="iconfont-archer">&#xe606;</span>coursera</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="算法"><span class="iconfont-archer">&#xe60a;</span>算法</span>
+    
+        <span class="sidebar-category-name" data-categories="java"><span class="iconfont-archer">&#xe60a;</span>java</span>
+    
+        <span class="sidebar-category-name" data-categories="机器学习"><span class="iconfont-archer">&#xe60a;</span>机器学习</span>
+    
+        <span class="sidebar-category-name" data-categories="随笔"><span class="iconfont-archer">&#xe60a;</span>随笔</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Rahul"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
+
+

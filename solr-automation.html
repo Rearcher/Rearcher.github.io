@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html>
+    <!-- title -->
+
+
+
+
+<head>
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
+    <meta name="author" content="Rahul">
+    <meta name="renderer" content="webkit">
+    <meta name="copyright" content="Rahul">
+    <meta name="keywords" content="Life's monolog | Rahul">
+    <meta name="description" content="">
+    <meta name="Cache-Control" content="no-cache">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>从Solr源码看自动机的实现 · Life&#39;s monolog</title>
+    <style type="text/css">
+    @font-face {
+        font-family: 'Oswald-Regular';
+        src: url("/font/Oswald-Regular.ttf");
+    }
+
+    body {
+        margin: 0;
+    }
+
+    header,
+    footer,
+    .back-top,
+    .sidebar,
+    .container,
+    .site-intro-meta,
+    .toc-wrapper {
+        display: none;
+    }
+
+    .site-intro {
+        position: relative;
+        z-index: 3;
+        width: 100%;
+        /* height: 50vh; */
+        overflow: hidden;
+    }
+
+    .site-intro-placeholder {
+        position: absolute;
+        z-index: -2;
+        top: 0;
+        left: 0;
+        width: calc(100% + 300px);
+        height: 100%;
+        background: repeating-linear-gradient(-45deg, #444 0, #444 80px, #333 80px, #333 160px);
+        background-position: center center;
+        transform: translate3d(-226px, 0, 0);
+        animation: gradient-move 2.5s ease-out 0s 1;
+    }
+
+    @keyframes gradient-move {
+        0% {
+            transform: translate3d(-226px, 0, 0);
+        }
+        100% {
+            transform: translate3d(0, 0, 0);
+        }
+    }
+
+</style>
+
+    <link rel="preload" href= /css/style.css?v=20180721 as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <link rel="stylesheet" href= /css/mobile.css?v=20180721 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    
+    <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
+/* This file is meant as a standalone workflow for
+- testing support for link[rel=preload]
+- enabling async CSS loading in browsers that do not support rel=preload
+- applying rel preload css once loaded, whether supported or not.
+*/ -->
+<script>
+(function( w ){
+	"use strict";
+	// rel=preload support test
+	if( !w.loadCSS ){
+		w.loadCSS = function(){};
+	}
+	// define on the loadCSS obj
+	var rp = loadCSS.relpreload = {};
+	// rel=preload feature support test
+	// runs once and returns a function for compat purposes
+	rp.support = (function(){
+		var ret;
+		try {
+			ret = w.document.createElement( "link" ).relList.supports( "preload" );
+		} catch (e) {
+			ret = false;
+		}
+		return function(){
+			return ret;
+		};
+	})();
+
+	// if preload isn't supported, get an asynchronous load by using a non-matching media attribute
+	// then change that media back to its intended value on load
+	rp.bindMediaToggle = function( link ){
+		// remember existing media attr for ultimate state, or default to 'all'
+		var finalMedia = link.media || "all";
+
+		function enableStylesheet(){
+			link.media = finalMedia;
+		}
+
+		// bind load handlers to enable media
+		if( link.addEventListener ){
+			link.addEventListener( "load", enableStylesheet );
+		} else if( link.attachEvent ){
+			link.attachEvent( "onload", enableStylesheet );
+		}
+
+		// Set rel and non-applicable media type to start an async request
+		// note: timeout allows this to happen async to let rendering continue in IE
+		setTimeout(function(){
+			link.rel = "stylesheet";
+			link.media = "only x";
+		});
+		// also enable media after 3 seconds,
+		// which will catch very old browsers (android 2.x, old firefox) that don't support onload on link
+		setTimeout( enableStylesheet, 3000 );
+	};
+
+	// loop through link elements in DOM
+	rp.poly = function(){
+		// double check this to prevent external calls from running
+		if( rp.support() ){
+			return;
+		}
+		var links = w.document.getElementsByTagName( "link" );
+		for( var i = 0; i < links.length; i++ ){
+			var link = links[ i ];
+			// qualify links to those with rel=preload and as=style attrs
+			if( link.rel === "preload" && link.getAttribute( "as" ) === "style" && !link.getAttribute( "data-loadcss" ) ){
+				// prevent rerunning on link
+				link.setAttribute( "data-loadcss", true );
+				// bind listeners to toggle media back
+				rp.bindMediaToggle( link );
+			}
+		}
+	};
+
+	// if unsupported, run the polyfill
+	if( !rp.support() ){
+		// run once at least
+		rp.poly();
+
+		// rerun poly on an interval until onload
+		var run = w.setInterval( rp.poly, 500 );
+		if( w.addEventListener ){
+			w.addEventListener( "load", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		} else if( w.attachEvent ){
+			w.attachEvent( "onload", function(){
+				rp.poly();
+				w.clearInterval( run );
+			} );
+		}
+	}
+
+
+	// commonjs
+	if( typeof exports !== "undefined" ){
+		exports.loadCSS = loadCSS;
+	}
+	else {
+		w.loadCSS = loadCSS;
+	}
+}( typeof global !== "undefined" ? global : this ) );
+</script>
+
+    <link rel="icon" href= "/assets/r.ico" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js" as="script" />
+    <link rel="preload" href="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" as="script" />
+    <link rel="preload" href="/scripts/main.js" as="script" />
+    <link rel="preload" as="font" href="/font/Oswald-Regular.ttf" crossorigin>
+    <link rel="preload" as="font" href="https://at.alicdn.com/t/font_327081_1dta1rlogw17zaor.woff" crossorigin>
+    
+    <!-- fancybox -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
+    <!-- 百度统计  -->
+    
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+    
+</head>
+
+    
+        <body class="post-body">
+    
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
+
+    <div class="read-progress"></div>
+    <div class="header-sidebar-menu">&#xe775;</div>
+    <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Life&#39;s monolog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">从Solr源码看自动机的实现</a>
+            </div>
+    </div>
+    
+    <a class="home-link" href=/>Life's monolog</a>
+</header>
+    <div class="wrapper">
+        <div class="site-intro" style=
+
+
+
+
+
+
+
+
+height:50vh;
+
+>
+    
+    <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
+            
+    <div class="site-intro-placeholder"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/my-index-bg.jpg)"></div>
+    <div class="site-intro-meta">
+        <!-- 标题  -->
+        <h1 class="intro-title">
+            <!-- 主页  -->
+            
+            从Solr源码看自动机的实现
+            <!-- 404 -->
+            
+        </h1>
+        <!-- 副标题 -->
+        <p class="intro-subtitle">
+            <!-- 主页副标题  -->
+            
+            
+            <!-- 404 -->
+            
+        </p>
+        <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "solr">solr</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "automaton">automaton</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">2,491</span> / Reading time: <span class="post-count">10 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2016/11/23</span>
+                    
+                    <span id="busuanzi_container_page_pv" class="busuanzi-pv">
+                        <span class="iconfont-archer">&#xe602;</span>
+                        <span id="busuanzi_value_page_pv"></span>
+                    </span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
+        
+    </div>
+</div>
+        <script>
+ 
+  // get user agent
+  var browser = {
+    versions: function () {
+      var u = window.navigator.userAgent;
+      return {
+        userAgent: u,
+        trident: u.indexOf('Trident') > -1, //IE内核
+        presto: u.indexOf('Presto') > -1, //opera内核
+        webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+        gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+        mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+        ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+        android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+        iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者安卓QQ浏览器
+        iPad: u.indexOf('iPad') > -1, //是否为iPad
+        webApp: u.indexOf('Safari') == -1, //是否为web应用程序，没有头部与底部
+        weixin: u.indexOf('MicroMessenger') == -1, //是否为微信浏览器
+        uc: u.indexOf('UCBrowser') > -1 //是否为android下的UC浏览器
+      };
+    }()
+  }
+  console.log("userAgent:" + browser.versions.userAgent);
+
+  // callback
+  function fontLoaded() {
+    console.log('font loaded');
+    if (document.getElementsByClassName('site-intro-meta')) {
+      document.getElementsByClassName('intro-title')[0].classList.add('intro-fade-in');
+      document.getElementsByClassName('intro-subtitle')[0].classList.add('intro-fade-in');
+      var postIntros = document.getElementsByClassName('post-intros')[0]
+      if (postIntros) {
+        postIntros.classList.add('post-fade-in');
+      }
+    }
+  }
+
+  // UC不支持跨域，所以直接显示
+  function asyncCb(){
+    if (browser.versions.uc) {
+      console.log("UCBrowser");
+      fontLoaded();
+    } else {
+      WebFont.load({
+        custom: {
+          families: ['Oswald-Regular']
+        },
+        loading: function () {  //所有字体开始加载
+          // console.log('loading');
+        },
+        active: function () {  //所有字体已渲染
+          fontLoaded();
+        },
+        inactive: function () { //字体预加载失败，无效字体或浏览器不支持加载
+          console.log('inactive: timeout');
+          fontLoaded();
+        },
+        timeout: 5000 // Set the timeout to two seconds
+      });
+    }
+  }
+
+  function asyncErr(){
+    console.warn('script load from CDN failed, will load local script')
+  }
+
+  // load webfont-loader async, and add callback function
+  function async(u, cb, err) {
+    var d = document, t = 'script',
+      o = d.createElement(t),
+      s = d.getElementsByTagName(t)[0];
+    o.src = u;
+    if (cb) { o.addEventListener('load', function (e) { cb(null, e); }, false); }
+    if (err) { o.addEventListener('error', function (e) { err(null, e); }, false); }
+    s.parentNode.insertBefore(o, s);
+  }
+
+  var asyncLoadWithFallBack = function(arr, success, reject) {
+      var currReject = function(){
+        reject()
+        arr.shift()
+        if(arr.length)
+          async(arr[0], success, currReject)
+        }
+
+      async(arr[0], success, currReject)
+  }
+
+  asyncLoadWithFallBack([
+    "https://cdn.jsdelivr.net/npm/webfontloader@1.6.28/webfontloader.min.js", 
+    "https://cdn.bootcss.com/webfont/1.6.28/webfontloader.js",
+    "/lib/webfontloader.min.js"
+  ], asyncCb, asyncErr)
+</script>        
+        <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
+        <div class="container container-unloaded">
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>最近在公司被分配了一个任务，看一下Solr通配符查询的实现，主要是因为发现Solr对于通配符查询很慢，于是就哼哧哼哧跑去看源码了。源码看起来很累，大量调用的嵌套、委托模式，一层套一层，不过还是很有收获，今天不谈Solr具体查询的逻辑，谈一谈其查询的实现方式——自动机。对于想自己实现用自动机进行字符串匹配、正则表达式匹配的同学，还是值得一看的。(基于Solr_5.0.0)</p>
+<h2 id="自动机的定义"><a href="#自动机的定义" class="headerlink" title="自动机的定义"></a>自动机的定义</h2><blockquote>
+<p>An automaton is a self-operating machine, or a machine or control mechanism designed to follow automatically a predetermined sequence of operations, or respond to predetermined instructions.<br><a id="more"></a></p>
+</blockquote>
+<p>“自动机就是自我运行的机器，它的运行机制被设计为自动执行一些预定义好的操作序列，或者对一些预定义好的指令做出反映。”维基百科如是说。此时的自动机，仅仅是停留在机器的字面意思，指的就是物理的机器，例如上发条的机器，上了发条之后，会按照预定义好的逻辑行动。</p>
+<h2 id="有限状态自动机"><a href="#有限状态自动机" class="headerlink" title="有限状态自动机"></a>有限状态自动机</h2><p>在计算机上运用比较普遍的就是有限状态自动机，简称状态机。所谓状态机，是一种表示若干个状态以及在这些状态之间的转移和动作等行为的数学模型。可以发现，状态自动机为什么称之为自动机，是因为其上的状态和状态之间的转移操作也都是预定义好的。而状态，在计算机程序中，就可以被抽象成很多东西，从而实现很多应用。状态自动机通常包含以下几个部分：</p>
+<blockquote>
+<ol>
+<li>唯一初始状态</li>
+<li>中间状态(可能是一个集合)</li>
+<li>接收状态(可能是一个集合)</li>
+<li>输入符号(可能是一个集合)</li>
+<li>转换函数(从一个状态到另一个状态的转换)</li>
+</ol>
+</blockquote>
+<p>来看一个简单的自动机：<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy4yyr9czj30gi06h3yu.jpg" alt="nfa_1"><br>其中，初始状态是0，中间状态是1，接收状态是2，{a,b}是输入符号。自动机最主要的一个应用就是用于正则表达式，上面的自动机对应的正则表达式是(a|b)*ab。其实到这里，自动机如何用于正则表达式匹配，就已经可见一斑了。一般过程如下：</p>
+<blockquote>
+<ol>
+<li>对正则表达式生成相应的有限状态自动机</li>
+<li>对输入的字符串，根据字符串中的字符，和状态机上的状态转移函数，进行状态转移，直到无法进行转移，或者到达输入的字符串的末尾</li>
+<li>无法进行转移或者到达输入字符串的末尾时，判断当前状态是不是可接收状态，如果是的话，则代表该输入的字符串被正则表达式接收，反之则不接收</li>
+</ol>
+</blockquote>
+<h2 id="确定的有限状态自动机-DFA-和不确定的有限状态自动机-NFA"><a href="#确定的有限状态自动机-DFA-和不确定的有限状态自动机-NFA" class="headerlink" title="确定的有限状态自动机(DFA)和不确定的有限状态自动机(NFA)"></a>确定的有限状态自动机(DFA)和不确定的有限状态自动机(NFA)</h2><p>上面举的自动机就是一个NFA，NFA和DFA的主要区别在于：</p>
+<blockquote>
+<ol>
+<li>DFA没有输入空串上的转换操作</li>
+<li>对于DFA，一个特定的符号输入，有且只能得到一个状态，而NFA可能得到一个状态集</li>
+</ol>
+</blockquote>
+<p>上面举的NFA的例子，对于状态0，输入符号a，可能得到状态1，也可能得到状态0。至于输入空串上的转换，就是输入空，可以转到下一个状态。输入空通常用希腊字母Epsilon表示，如下图中状态0到状态1的转换。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy4yyib3wj30go08q0tc.jpg" alt="此处输入图片的描述"><br>NFA和DFA具体的区别也很多，NFA也能转化成DFA，这里都不再展开了。</p>
+<h2 id="Solr中的自动机实现"><a href="#Solr中的自动机实现" class="headerlink" title="Solr中的自动机实现"></a>Solr中的自动机实现</h2><p>好了，终于到了实现自动机的时候了。从上面的自动机概念的介绍可以发现，实现自动机重要的两个组成部分，就是状态以及状态之间的转移。Solr中状态之间的转换用Transition类来表示。Transition类如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Transition</span> </span>&#123;</span><br><span class="line">  <span class="comment">/** Sole constructor. */</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="title">Transition</span><span class="params">()</span> </span>&#123;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/** Source state. */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> source;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/** Destination state. */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> dest;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/** Minimum accepted label (inclusive). */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> min;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/** Maximum accepted label (inclusive). */</span></span><br><span class="line">  <span class="keyword">public</span> <span class="keyword">int</span> max;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">int</span> transitionUpto = -<span class="number">1</span>;</span><br><span class="line"> </span><br><span class="line">  <span class="meta">@Override</span></span><br><span class="line">  <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> source + <span class="string">" --&gt; "</span> + dest + <span class="string">" "</span> + (<span class="keyword">char</span>) min + <span class="string">"-"</span> + (<span class="keyword">char</span>) max;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，成员变量主要有代表源状态的source，目标状态的dest，以及转换边上的label。可能会有同学觉得label的概念不是很好理解，可以看一下上面的NFA的实例图，label就是每条转换边上的字母。Solr中用min和max两个变量来指定了label的范围，而且都是int型变量，这是因为Solr会把字符转换成在Unicode字符集里的编号，即Java中的CodePoint。比如某个状态可以接受任意字符，那么用Transition类来表示的话，<code>min=Character.MIN_CODE_POINT</code>, <code>max=Character.MAX_CODE_POINT</code>。</p>
+<p>下面就可以看一下自动机类Automaton的实现了，按照上面的思路，Automaton类里面，得包含一个整型数组，保存所有的状态，还得包含一个Transition数组，保存所有状态间的转换。但Solr源码可不是这样实现的，而是用到了一些小trick。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/** Index in the transitions array, where this states</span></span><br><span class="line"><span class="comment"> *  leaving transitions are stored, or -1 if this state</span></span><br><span class="line"><span class="comment"> *  has not added any transitions yet, followed by number</span></span><br><span class="line"><span class="comment"> *  of transitions. */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] states;</span><br><span class="line"> </span><br><span class="line"><span class="keyword">private</span> <span class="keyword">final</span> BitSet isAccept;</span><br><span class="line"></span><br><span class="line"><span class="comment">/** Holds toState, min, max for each transition. */</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">int</span>[] transitions;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，代码中用transitions整型数组保存状态间的转移，用states整型数组保存状态信息。transitions数组用三个位置保存一个转换信息，依次是toState、min、max，这样三个一组三个一组，依次保存每一个转换的信息。你可能会好奇，为什么没有保存源状态信息，这就要说到states数组。states数组是两个一组，作为一个状态的信息，第一个位置表示该状态上的转移在transitions数组中的下标，第二个位置表示在该状态上的转移边的数量。这就容易理解了，假设我要知道状态i(假设从0开始)的第j个转移,那么直接访问<code>transitions[states[i*2] + j*3]</code>就可以了。</p>
+<p>除此之外，我们还需要一个step函数，用于一步一步执行自动机，源码如下：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Performs lookup in transitions, assuming determinism.</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> state starting state</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> label codepoint to look up</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> destination state, -1 if no matching outgoing transition</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">step</span><span class="params">(<span class="keyword">int</span> state, <span class="keyword">int</span> label)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">assert</span> state &gt;= <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">assert</span> label &gt;= <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">int</span> trans = states[<span class="number">2</span>*state];</span><br><span class="line">  <span class="keyword">int</span> limit = trans + <span class="number">3</span>*states[<span class="number">2</span>*state+<span class="number">1</span>];</span><br><span class="line">  <span class="comment">// <span class="doctag">TODO:</span> we could do bin search; transitions are sorted</span></span><br><span class="line">  <span class="keyword">while</span> (trans &lt; limit) &#123;</span><br><span class="line">    <span class="keyword">int</span> dest = transitions[trans];</span><br><span class="line">    <span class="keyword">int</span> min = transitions[trans+<span class="number">1</span>];</span><br><span class="line">    <span class="keyword">int</span> max = transitions[trans+<span class="number">2</span>];</span><br><span class="line">    <span class="keyword">if</span> (min &lt;= label &amp;&amp; label &lt;= max) &#123;</span><br><span class="line">      <span class="keyword">return</span> dest;</span><br><span class="line">    &#125;</span><br><span class="line">    trans += <span class="number">3</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，基本逻辑就是根据输入的label，判断label在不在该状态的Transition的min和max之间，在的话，就可以跳到该Transition的dest状态。</p>
+<p>其实到这里，这个自动机已经可以跑了，如果你想用于字符串匹配，那么就根据字符串长度构造出相等数量的状态，再根据字符串中的每个字符，添加Transition，初始化好states和transiitons数组，匹配的时候通过step函数一步一步执行即可。Solr中还考虑了很多细节，不再展开叙述。</p>
+<h2 id="Solr中自动机的快速执行"><a href="#Solr中自动机的快速执行" class="headerlink" title="Solr中自动机的快速执行"></a>Solr中自动机的快速执行</h2><p>由于Solr对于查询的匹配，需要从索引文件中读出很多Term在自动机上进行匹配，所以能够快速执行自动机匹配能够有效降低结果返回的延迟。基本的思想还是用空间换时间。Solr中把每个Automaton类转换成RunAutomaton类，从而快速执行，看一下RunAutomaton类中的变量，就可以了解其实现方式：<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">int</span>[] transitions; </span><br><span class="line"><span class="keyword">final</span> <span class="keyword">int</span>[] points; <span class="comment">// char interval start points</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">int</span>[] classmap; <span class="comment">// map from char number to class class</span></span><br></pre></td></tr></table></figure></p>
+<p>先说一下这个points整型数组的作用，用于保存自动机的所有转换边上的输入，即所有转换边上输入字符的CodePoint，并且是从小到大排序好的。这里的transitions数组不同于Automaton类中的Transition数组，这里的transitions数组看似是一个一维数组，实则是当二维数组来用的，用于保存自动机上的状态经过points数组中保存的输入字符的转换能够到达的状态。如果说状态数是n，那么transitions数组的长度就是<code>n * points.length</code>。如果不存在该输入字符的转换，那么transitions数组上对应位置的元素是-1。可以看到，这样用一个很大的数组保存所有的转换，具有很大的冗余。不过优势在于，只需要生成一次RunAutomaton实例，就可以重复使用。</p>
+<p>现在假设我们在状态i，输入字符c，想要知道下一个状态。那么首先需要从points数组中找出字符c对应的CodePoint在points数组中的下标j，那么<code>transitions[i*points.length + j]</code>即代表下一个状态。现在已经很快了，不过还有一个不足的地方，倘若points数组很大，从头到尾遍历需要很长的时间，一种方式是采用二分查找（因为是排好序的，不过Solr并未采用），另一种方式是更极端的用空间换时间，启用classmap整型数组。classmap数组保存的是某个输入字符的CodePoint在points数组中的下标，也就是说，比如输入字符c，其对应的CodePoint是d，那么<code>points[classmap[d]] = d</code>。现在只需要直接访问<code>transitiosn[i*points.length + classmap[d]]</code>就可以知道下一个状态了。</p>
+
+    </article>
+    <!-- license  -->
+    
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://rearcher.github.io">Rahul</a>
+            <p>原文链接: <a href="https://rearcher.github.io/solr-automation.html">https://rearcher.github.io/solr-automation.html</a>
+            <p>发表日期: <a href="https://rearcher.github.io/solr-automation.html">November 23rd 2016, 8:43:13 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
+        </div>
+    
+    <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+                <div class="nextSlogan">Next Post</div>
+                <a href= "/coursera-ml-summary.html" title= Andrew Ng《machine learning》小结 >
+                    <div class="nextTitle">Andrew Ng《machine learning》小结</div>
+                </a>
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/netty-http-proxy.html" title= 基于Netty的HTTP代理服务器 >
+                    <div class="prevTitle">基于Netty的HTTP代理服务器</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
+    
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        
+        var disqus_config = function () {
+        this.page.url = "https://rearcher.github.io/solr-automation.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "从Solr源码看自动机的实现"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://rearcher-github-io.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
+</main>
+            <!-- profile -->
+            
+        </div>
+        <footer class="footer footer-unloaded">
+    <!-- social  -->
+    
+    <div class="social">
+        
+    
+        
+            
+                <a href="mailto:mailto:huanhuan7719@gmail.com" class="iconfont-archer email" title=email ></a>
+            
+        
+    
+        
+            
+                <a href="https://github.com/rearcher" class="iconfont-archer github" target="_blank" title=github></a>
+            
+        
+    
+        
+            
+                <a href="https://weibo.com/u/5660138679" class="iconfont-archer weibo" target="_blank" title=weibo></a>
+            
+        
+    
+        
+            
+                <a href="/atom.xml" class="iconfont-archer rss" target="_blank" title=rss></a>
+            
+        
+    
+
+    </div>
+    
+    <!-- powered by Hexo  -->
+    <div class="copyright">
+        <span id="hexo-power">Powered by <a href="https://hexo.io/" target="_blank">Hexo</a></span><span class="iconfont-archer power">&#xe635;</span><span id="theme-info">theme <a href="https://github.com/fi3ework/hexo-theme-archer" target="_blank">Archer</a></span>
+    </div>
+    <!-- 不蒜子  -->
+    
+    <div class="busuanzi-container">
+    
+     
+    <span id="busuanzi_container_site_pv">PV: <span id="busuanzi_value_site_pv"></span> :)</span>
+    
+    </div>
+    
+</footer>
+    </div>
+    <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#自动机的定义"><span class="toc-number">1.</span> <span class="toc-text">自动机的定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#有限状态自动机"><span class="toc-number">2.</span> <span class="toc-text">有限状态自动机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#确定的有限状态自动机-DFA-和不确定的有限状态自动机-NFA"><span class="toc-number">3.</span> <span class="toc-text">确定的有限状态自动机(DFA)和不确定的有限状态自动机(NFA)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solr中的自动机实现"><span class="toc-number">4.</span> <span class="toc-text">Solr中的自动机实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Solr中自动机的快速执行"><span class="toc-number">5.</span> <span class="toc-text">Solr中自动机的快速执行</span></a></li></ol>
+    </div>
+    
+    <div class="back-top iconfont-archer">&#xe639;</div>
+    <div class="sidebar sidebar-hide">
+    <ul class="sidebar-tabs sidebar-tabs-active-0">
+        <li class="sidebar-tab-archives"><span class="iconfont-archer">&#xe67d;</span><span class="tab-name">Archive</span></li>
+        <li class="sidebar-tab-tags"><span class="iconfont-archer">&#xe61b;</span><span class="tab-name">Tag</span></li>
+        <li class="sidebar-tab-categories"><span class="iconfont-archer">&#xe666;</span><span class="tab-name">Cate</span></li>
+    </ul>
+    <div class="sidebar-content sidebar-content-show-archive">
+          <div class="sidebar-panel-archives">
+    <!-- 在ejs中将archive按照时间排序 -->
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <div class="total-and-search">
+        <div class="total-archive">
+        Total : 13
+        </div>
+        <!-- search  -->
+        
+    </div>
+    
+    <div class="post-archive">
+    
+    
+    
+    
+    <div class="archive-year"> 2018 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/24</span><a class="archive-post-title" href= "/interesting-knapsack-problem.html" >有趣的背包问题</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/25</span><a class="archive-post-title" href= "/bit-logn-range-update.html" >树状数组区间更新的O(logn)实现</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/24</span><a class="archive-post-title" href= "/naive_bayes.html" >用python实现朴素贝叶斯分类算法</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/22</span><a class="archive-post-title" href= "/k_nearest_neighbors.html" >用python实现k近邻、kd树搜索</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/18</span><a class="archive-post-title" href= "/logistic_regression.html" >用python实现逻辑回归</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/16</span><a class="archive-post-title" href= "/linear_regression.html" >用python实现线性回归</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">04/01</span><a class="archive-post-title" href= "/coursera-ml-summary.html" >Andrew Ng《machine learning》小结</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
+    
+    <div class="archive-year"> 2016 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">11/23</span><a class="archive-post-title" href= "/solr-automation.html" >从Solr源码看自动机的实现</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/09</span><a class="archive-post-title" href= "/netty-http-proxy.html" >基于Netty的HTTP代理服务器</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">09/03</span><a class="archive-post-title" href= "/netease-interview.html" >网易面试小记</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">08/11</span><a class="archive-post-title" href= "/java-memory-management.html" >Java自动内存管理</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/20</span><a class="archive-post-title" href= "/simple-java-thread-pool.html" >Java线程池的简单实现</a>
+        </li>
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">07/18</span><a class="archive-post-title" href= "/myjvm.html" >我理解中的JVM</a>
+        </li>
+    
+    </div>
+  </div>
+        <div class="sidebar-panel-tags">
+    <div class="sidebar-tags-name">
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
+    
+        <span class="sidebar-tag-name" data-tags="背包问题"><span class="iconfont-archer">&#xe606;</span>背包问题</span>
+    
+        <span class="sidebar-tag-name" data-tags="动态规划"><span class="iconfont-archer">&#xe606;</span>动态规划</span>
+    
+        <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
+    
+        <span class="sidebar-tag-name" data-tags="机器学习"><span class="iconfont-archer">&#xe606;</span>机器学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="go"><span class="iconfont-archer">&#xe606;</span>go</span>
+    
+        <span class="sidebar-tag-name" data-tags="jvm"><span class="iconfont-archer">&#xe606;</span>jvm</span>
+    
+        <span class="sidebar-tag-name" data-tags="java"><span class="iconfont-archer">&#xe606;</span>java</span>
+    
+        <span class="sidebar-tag-name" data-tags="netty"><span class="iconfont-archer">&#xe606;</span>netty</span>
+    
+        <span class="sidebar-tag-name" data-tags="maven"><span class="iconfont-archer">&#xe606;</span>maven</span>
+    
+        <span class="sidebar-tag-name" data-tags="solr"><span class="iconfont-archer">&#xe606;</span>solr</span>
+    
+        <span class="sidebar-tag-name" data-tags="automaton"><span class="iconfont-archer">&#xe606;</span>automaton</span>
+    
+        <span class="sidebar-tag-name" data-tags="coursera"><span class="iconfont-archer">&#xe606;</span>coursera</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-tags-empty">&#xe678;</div>
+    <div class="tag-load-fail" style="display: none; color: #ccc; font-size: 0.6rem;">
+    缺失模块。<br/>
+    1、请确保node版本大于6.2<br/>
+    2、在博客根目录（注意不是archer根目录）执行以下命令：<br/>
+    <span style="color: #f75357; font-size: 1rem; line-height: 2rem;">npm i hexo-generator-json-content --save</span><br/>
+    3、在根目录_config.yml里添加配置：
+    <pre style="color: #787878; font-size: 0.6rem;">
+jsonContent:
+  meta: false
+  pages: false
+  posts:
+    title: true
+    date: true
+    path: true
+    text: false
+    raw: false
+    content: false
+    slug: false
+    updated: false
+    comments: false
+    link: false
+    permalink: false
+    excerpt: false
+    categories: true
+    tags: true</pre>
+    </div> 
+    <div class="sidebar-tags-list"></div>
+</div>
+        <div class="sidebar-panel-categories">
+    <div class="sidebar-categories-name">
+    
+        <span class="sidebar-category-name" data-categories="算法"><span class="iconfont-archer">&#xe60a;</span>算法</span>
+    
+        <span class="sidebar-category-name" data-categories="java"><span class="iconfont-archer">&#xe60a;</span>java</span>
+    
+        <span class="sidebar-category-name" data-categories="机器学习"><span class="iconfont-archer">&#xe60a;</span>机器学习</span>
+    
+        <span class="sidebar-category-name" data-categories="随笔"><span class="iconfont-archer">&#xe60a;</span>随笔</span>
+    
+    </div>
+    <div class="iconfont-archer sidebar-categories-empty">&#xe678;</div>
+    <div class="sidebar-categories-list"></div>
+</div>
+    </div>
+</div> 
+    <script>
+    var siteMeta = {
+        root: "/",
+        author: "Rahul"
+    }
+</script>
+    <!-- CDN failover -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+    <script type="text/javascript">
+        if (typeof window.$ === 'undefined')
+        {
+            console.warn('jquery load from jsdelivr failed, will load local script')
+            document.write('<script src="/lib/jquery.min.js">\x3C/script>')
+        }
+    </script>
+    <script src="/scripts/main.js"></script>
+    <!-- algolia -->
+    
+    <!-- busuanzi  -->
+    
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    
+    <!-- CNZZ  -->
+    
+    </div>
+    <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
+     
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
+<script src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</body>
+</html>
+
+
