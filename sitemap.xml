@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://rearcher.github.io/k_nearest_neighbors.html</loc>
+    
+    <lastmod>2018-12-04T15:02:32.025Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://rearcher.github.io/interesting-knapsack-problem.html</loc>
     
     <lastmod>2018-09-24T12:48:46.349Z</lastmod>
@@ -19,13 +26,6 @@
     <loc>https://rearcher.github.io/naive_bayes.html</loc>
     
     <lastmod>2018-04-24T09:11:04.544Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://rearcher.github.io/k_nearest_neighbors.html</loc>
-    
-    <lastmod>2018-04-22T06:27:16.298Z</lastmod>
     
   </url>
   
