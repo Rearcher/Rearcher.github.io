@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>用python实现逻辑回归 · Life&#39;s monolog</title>
+    <title>用python实现感知机算法 · Life&#39;s monolog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -210,7 +210,7 @@
                 <a href="/" >Life&#39;s monolog</a>
             </div>
             <div class="post-title">
-                <a href="#" class="post-name">用python实现逻辑回归</a>
+                <a href="#" class="post-name">用python实现感知机算法</a>
             </div>
     </div>
     
@@ -242,7 +242,7 @@ height:50vh;
         <h1 class="intro-title">
             <!-- 主页  -->
             
-            用python实现逻辑回归
+            用python实现感知机算法
             <!-- 404 -->
             
         </h1>
@@ -269,12 +269,12 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,347</span> / Reading time: <span class="post-count">6 min</span></span>
+                        <span>Word count: <span class="post-count">1,162</span> / Reading time: <span class="post-count">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
                     <span class="post-intro-calander iconfont-archer">&#xe676;</span>
-                    <span class="post-intro-time">2018/04/18</span>
+                    <span class="post-intro-time">2018/12/06</span>
                     
                     <span id="busuanzi_container_page_pv" class="busuanzi-pv">
                         <span class="iconfont-archer">&#xe602;</span>
@@ -398,35 +398,43 @@ height:50vh;
         <div class="container container-unloaded">
             <main class="main post-page">
     <article class="article-entry">
-        <h2 id="基本形式"><a href="#基本形式" class="headerlink" title="基本形式"></a>基本形式</h2><p>逻辑回归主要用于解决分类问题。逻辑回归函数的输出是一个处于0-1之间的值，代表输出是1的概率。<br>\begin{align}&amp; h_\theta(x) = P(y=1 | x ; \theta) = 1 - P(y=0 | x ; \theta) \newline&amp; P(y = 0 | x;\theta) + P(y = 1 | x ; \theta) = 1\end{align}</p>
-<p>基本形式如下：<br>\begin{align}&amp; h_\theta (x) =  g ( \theta^T x ) \newline \newline&amp; z = \theta^T x \newline&amp; g(z) = \dfrac{1}{1 + e^{-z}}\end{align}</p>
-<p>可以看到逻辑回归其实就是在线性回归上套了一个$g$函数，也称为Sigmoid函数，形式如下图：<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fpy310ss7lj30my03k74g.jpg" alt="sigmoid"></p>
-<p>可以看到，当$z$的值大于0的时候，$g(z)$是大于0.5的，当$z$小于0时，$g(z)$是小于0.5的。所以如果假设$h_\theta(x) \geq 0.5$时有$y = 1$（即当输出概率大于等于0.5时，判定为类别1），就等价于$\theta^T x \geq 0 \Rightarrow y = 1$。</p>
-<h2 id="模型求解"><a href="#模型求解" class="headerlink" title="模型求解"></a>模型求解</h2><p>求解模型首先要了解模型的损失函数，损失函数可以用来衡量模型对数据的拟合程度。逻辑回归采用对数损失函数，如下：</p>
-<script type="math/tex; mode=display">cost(h_{\theta}(x),y) = \begin{cases}  -log(h_{\theta}(x))  & \text {if y=1} \\ -log(1-h_{\theta}(x))  & \text{if y=0} \end{cases}</script><blockquote>
-<p>当$y=1$时，即这个样本是正类：</p>
-<ol>
-<li>如果此时$h_\theta(x) = 1$，则对于这个样本而言是分类正确的，此时$cost=-log(1)=0$，表示对于分类正确的样本没有惩罚；</li>
-<li>如果此时$h_\theta(x) = 0$，则对于这个样本而言是分类错误的，此时$cost=-log(0) \to \infty$，表示对于分类错误的样本要给予很大的惩罚。</li>
+        <script type="math/tex; mode=display">\begin{gathered}
+f(x) = sign(w \cdot x + b) \\
+sign(x) = \begin{cases} +1, x \geq 0 \\ -1, x < 0 \end{cases}
+\end{gathered}</script><p>感知机是一种线性分类模型，属于判别模型。几何解释：$w \cdot x + b = 0$可以看成是一个超平面，其中$w$是超平面的法向量，$b$是超平面的截距，这个超平面把特征空间划分为两部分。</p>
+<h2 id="学习策略"><a href="#学习策略" class="headerlink" title="学习策略"></a>学习策略</h2><p>因为感知机是一个线性分类器，所以学习的目标是求得能将两类点分离的超平面。这需要定义一个损失函数，并且将损失函数极小化。直观来说，损失函数可以定义为误分类的点的数量，但是这样的损失函数不是参数$w$、$b$的连续可导函数，无法优化。损失函数的另一个选择是<strong>误分类点到超平面的总距离</strong>。输入空间中任意一点$x_0$到分离超平面的距离为$\frac{1}{|w|}|w \cdot x_0 + b|$，考虑到对于误分类的数据点$(x_i, y_i)$来说，有$-y_i(w \cdot x_i + b) &gt; 0$，因此所有误分类点到超平面的总距离可以写成$-\frac{1}{|w|} \sum_{x_i \in M} y_i(w \cdot x_i + b)$，不考虑$\frac{1}{|w|}$，损失函数就可以写成</p>
+<script type="math/tex; mode=display">L(w, b) = -\sum_{x_i \in M} y_i(w \cdot x_i + b)</script><p>其中$M$是误分类点的集合。</p>
+<h2 id="学习算法"><a href="#学习算法" class="headerlink" title="学习算法"></a>学习算法</h2><h3 id="原始形式"><a href="#原始形式" class="headerlink" title="原始形式"></a>原始形式</h3><p>根据损失函数分别计算参数$w$和$b$的梯度：</p>
+<script type="math/tex; mode=display">\begin{gathered}
+\nabla_w L(w,b) = -\sum_{x_i \in M} y_i x_i \\
+\nabla_b L(w,b) = -\sum_{x_i \in M} y_i
+\end{gathered}</script><p>随机梯度下降算法：随机选取误分类点$(x_i, y_i)$，对$w$，$b$进行更新（$w$和$b$的初值都为0）：</p>
+<script type="math/tex; mode=display">\begin{gathered}
+w \gets w + \eta y_i x_i \\
+b \gets b + \eta y_i
+\end{gathered}</script><h3 id="对偶形式"><a href="#对偶形式" class="headerlink" title="对偶形式"></a>对偶形式</h3><p>从上面更新$w$和$b$的式子可以看到，最终的$w$和$b$的值取决于误分类点。因此最终的$w$和$b$可以写成如下形式：</p>
+<script type="math/tex; mode=display">\begin{gathered}
+w = \sum_{i=1}^N \alpha_i y_i x_i \\
+b = \sum_{i=1}^N \alpha_i y_i
+\end{gathered}</script><p>其中$\alpha_i = n_i \eta_i$，其中$n_i$是点$i$用于更新的次数。因此求解$w$和$b$转变成了求解参数参数向量$\alpha$。初始时可以设置$\alpha$向量为0向量，b也设置为0，然后对于随机选取的点$(x_i, y_i)$，如果有$y_i(\sum_{j=1}^N \alpha_j y_j x_j \cdot x_i + b) \leq 0$，则进行以下更新：</p>
+<script type="math/tex; mode=display">\begin{gathered}
+\alpha_i \gets \alpha_i + \eta \\
+b \gets b + \eta y_i
+\end{gathered}</script><p>对偶形式中，需要计算向量$x$之间的内积，因此可以提前算出来，并以矩阵的形式存储，这个矩阵也称为Gram矩阵。</p>
+<h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>下面用python实现三维空间上的感知机算法，即输入空间是3维的，感知机方程则表示三维空间中的一个平面。代码中随机生成一个三维平面，接着随机生成平面两侧的数据点用于感知机算法的拟合，然后分别用accuracy、precision、recall来评判拟合的效果，以及用可视化的方式来展示拟合的状态。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Perceptron</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y, n_iterations=<span class="number">1000</span>, learning_rate=<span class="number">1</span>)</span>:</span></span><br><span class="line">        <span class="string">"""感知机训练算法的原始形式</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            X: 输入的特征</span></span><br><span class="line"><span class="string">            y: 输入的标签&#123;-1, 1&#125;</span></span><br><span class="line"><span class="string">            n_iterations: 算法迭代次数</span></span><br><span class="line"><span class="string">            learning_rate: 学习速率</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        n, m = X.shape</span><br><span class="line">        self.w, self.b = np.zeros((<span class="number">3</span>, <span class="number">1</span>)), <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(range(n_iterations)):</span><br><span class="line">            idx = np.random.randint(<span class="number">0</span>, n)</span><br><span class="line">            <span class="keyword">if</span> y[idx] * (np.vdot(self.w, X[idx].reshape(<span class="number">3</span>, <span class="number">1</span>)) + self.b) &lt;= <span class="number">0</span>:</span><br><span class="line">                self.w += learning_rate * y[idx] * X[idx].reshape(<span class="number">3</span>, <span class="number">1</span>)</span><br><span class="line">                self.b += learning_rate * y[idx]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit_dual</span><span class="params">(self, X, y, n_iterations=<span class="number">1000</span>, learning_rate=<span class="number">1</span>)</span>:</span></span><br><span class="line">        <span class="string">"""感知机训练算法的对偶形式"""</span></span><br><span class="line">        n, m = X.shape</span><br><span class="line">        self.alpha, self.b = np.zeros((n, <span class="number">1</span>)), <span class="number">0</span></span><br><span class="line">        self.gram = np.zeros((n, n))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算Gram相关性矩阵</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, n):</span><br><span class="line">            self.gram[i][i] = <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i + <span class="number">1</span>, n):</span><br><span class="line">                self.gram[i][j] = self.gram[j][i] = np.vdot(X[i].reshape(<span class="number">3</span>, <span class="number">1</span>), X[j].reshape(<span class="number">3</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(range(n_iterations)):</span><br><span class="line">            idx = np.random.randint(<span class="number">0</span>, n)</span><br><span class="line">            <span class="keyword">if</span> y[idx] * (sum(self.alpha * y * self.gram[:, idx].reshape(<span class="number">-1</span>, <span class="number">1</span>)) + self.b) &lt;= <span class="number">0</span>:</span><br><span class="line">                self.alpha[idx][<span class="number">0</span>] += learning_rate</span><br><span class="line">                self.b += learning_rate * y[idx]</span><br><span class="line">        self.w = sum(self.alpha * y * X).reshape(<span class="number">-1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, X)</span>:</span></span><br><span class="line">        <span class="string">"""预测"""</span></span><br><span class="line">        y = (np.dot(X, self.w) + self.b).reshape(<span class="number">-1</span>, <span class="number">1</span>)</span><br><span class="line">        n, _ = y.shape</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">            y[i][<span class="number">0</span>] = sign(y[i][<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">return</span> y</span><br></pre></td></tr></table></figure></p>
+<p>可以看到最后程序输出的accuracy、precision、recall都可以达到1.0，说明拟合效果很好。下图展示了拟合的效果，其中黄色的平面代表用于生成随机数的平面，绿色的平面代表拟合的平面。不同类的数据点都分布于平面的两侧。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fxx48c5medj30p40mujtz.jpg" alt="result"><br>完整代码在<a href="https://github.com/rearcher/template/blob/master/ml/perceptron.py" target="_blank" rel="noopener">这里</a>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文实现了输入空间是三维的感知机算法，实现了原始形式的学习算法和对偶形式的学习算法。对于更高维的输入，也可以采取类似的方式实现。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》</a></li>
 </ol>
-<p>$y=0$时同理，不再赘述。</p>
-</blockquote>
-<p>可以将上述损失函数简化合并，变成如下形式：</p>
-<script type="math/tex; mode=display">cost(h_{\theta}(x),y) = -y^{(i)}log(h_{\theta}(x)) - (1-y^{(i)})log(1-h_{\theta}(x))</script><p>考虑所有的样本，就变成了如下的形式：</p>
-<script type="math/tex; mode=display">cost(h_{\theta}(x),y) = \frac{1}{m} \sum_{i=1}^{m} -y^{(i)}log(h_{\theta}(x)) - (1-y^{(i)})log(1-h_{\theta}(x))</script><p>逻辑回归模型的求解过程就是最小化上面的损失函数。这里还是采用梯度下降法来求解，还是用损失函数对每个参数$\theta_j$求偏导，求导过程不再涉及，参数$\theta_j$的梯度（偏导）为$\frac{1}{m} \sum_{i=1}^m (h_\theta(x^{(i)}) - y^{(i)}) x_j^{(i)}$，梯度下降算法就是对每个参数进行如下更新：</p>
-<script type="math/tex; mode=display">\theta_j := \theta_j - \frac{\alpha}{m} \sum_{i=1}^m (h_\theta(x^{(i)}) - y^{(i)}) x_j^{(i)}</script><p>为了便于实现，这里还是给出损失函数和梯度下降的向量化形式，如下：<br>\begin{align}<br>&amp; h = g(X\theta)\newline<br>&amp; J(\theta)  = \frac{1}{m} \cdot \left(-y^{T}\log(h)-(1-y)^{T}\log(1-h)\right)\newline<br>&amp; \theta := \theta - \frac{\alpha}{m} X^{T} (g(X \theta ) - \vec{y})<br>\end{align}</p>
-<h2 id="模型实现"><a href="#模型实现" class="headerlink" title="模型实现"></a>模型实现</h2><p>有了上面的公式，再使用python自带的numpy矩阵运算库，可以很方便地实现逻辑回归模型。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"""逻辑回归"""</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LogisticRegression</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">sigmoid</span><span class="params">(self, z)</span>:</span></span><br><span class="line">        <span class="string">"""sigmoid函数"""</span></span><br><span class="line">        g = <span class="number">1</span> / (<span class="number">1</span> + np.exp(-z))</span><br><span class="line">        <span class="keyword">return</span> g</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">costFunction</span><span class="params">(self, X, y)</span>:</span></span><br><span class="line">        <span class="string">"""损失函数</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            X: 训练数据</span></span><br><span class="line"><span class="string">            y: 标签数据</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">        Returns:</span></span><br><span class="line"><span class="string">            J: 模型当前的损失</span></span><br><span class="line"><span class="string">            grad: 损失函数的梯度</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        n_samples = len(y)</span><br><span class="line">        h = self.sigmoid(X.dot(self.theta))</span><br><span class="line">        J = (<span class="number">1</span> / n_samples) * (<span class="number">-1</span> * y.T.dot(np.log(h)) - (<span class="number">1</span> - y).T.dot(np.log(<span class="number">1</span> - h)))</span><br><span class="line">        grad = (<span class="number">1</span> / n_samples) * X.T.dot(h - y)</span><br><span class="line">        <span class="keyword">return</span> J, grad</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y, n_iterations=<span class="number">1000</span>, learning_rate=<span class="number">0.01</span>)</span>:</span></span><br><span class="line">        <span class="string">"""训练模型</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            X: 训练数据</span></span><br><span class="line"><span class="string">            y: 标签数据</span></span><br><span class="line"><span class="string">            n_iterations: 梯度下降算法迭代次数</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        n_features = X.shape[<span class="number">1</span>]</span><br><span class="line">        self.theta = np.zeros([n_features, <span class="number">1</span>])</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n_iterations):</span><br><span class="line">            J, grad = self.costFunction(X, y)</span><br><span class="line">            self.theta -= learning_rate * grad</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, X)</span>:</span></span><br><span class="line">        <span class="string">"""用模型进行预测"""</span></span><br><span class="line">        y_pred = np.round(self.sigmoid(X.dot(self.theta))).astype(int)</span><br><span class="line">        <span class="keyword">return</span> y_pred</span><br></pre></td></tr></table></figure></p>
-<p>通过可视化训练过程中损失函数的变化，可以判断梯度下降算法是否正常工作，如下图所示：<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fqgu51x8afj30zk0qojry.jpg" alt="lr_gd"><br>可以看到模型的损失随着迭代次数不断下降。下面使用sklearn自带的数据集iris来粗略地测试一下我们的分类器的效果：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 使用sklearn自带的测试数据集</span></span><br><span class="line">iris = datasets.load_iris()</span><br><span class="line">X = iris.data[:<span class="number">100</span>]</span><br><span class="line">y = np.array(iris.target[:<span class="number">100</span>]).reshape(<span class="number">100</span>, <span class="number">1</span>)</span><br><span class="line"><span class="comment"># 分割训练集和测试集</span></span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=<span class="number">0.3</span>, random_state=<span class="number">19</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用训练集训练模型，用测试集测试模型</span></span><br><span class="line">model = LogisticRegression()</span><br><span class="line">model.fit(X_train, y_train)</span><br><span class="line">y_pred = model.predict(X_test)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 计算模型的各项评分</span></span><br><span class="line">accuracy = accuracy_score(y_test, y_pred)</span><br><span class="line">precision = precision_score(y_test, y_pred)</span><br><span class="line">recall = recall_score(y_test, y_pred)</span><br><span class="line">print(<span class="string">f'accuracy <span class="subst">&#123;accuracy&#125;</span>, precision <span class="subst">&#123;precision&#125;</span>, recall <span class="subst">&#123;recall&#125;</span>'</span>)</span><br></pre></td></tr></table></figure></p>
-<p>可以看到最后模型的accuracy、precision、recall都为1。感兴趣的读者还可以使用其他数据集来测试，完整代码在<a href="https://github.com/Rearcher/template/blob/master/ml/logistic_regression.py" target="_blank" rel="noopener">这里</a>。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文用梯度下降算法实现了逻辑回归模型，由于梯度下降过程中考虑了所有的训练样本，所以是批量梯度下降。当数据量很大时，应该采用随机梯度下降或者小批量梯度下降来加快训练速度。或许读者会看到有的博客或者书中求解逻辑回归模型用的是梯度上升算法，这取决于损失函数的定义。如果原始的问题转化为求某个损失函数的极小值，那么就应该采取梯度下降算法，如本文中所示；如果原始的问题转化为求某个损失函数的最大值，那么就应该用梯度上升算法。梯度上升与梯度下降算法的区别仅仅在于更新参数时是加上梯度还是减去梯度。</p>
 
     </article>
     <!-- license  -->
     
         <div class="license-wrapper">
             <p>原文作者: <a href="https://rearcher.github.io">Rahul</a>
-            <p>原文链接: <a href="https://rearcher.github.io/logistic_regression.html">https://rearcher.github.io/logistic_regression.html</a>
-            <p>发表日期: <a href="https://rearcher.github.io/logistic_regression.html">April 18th 2018, 12:56:42 pm</a>
+            <p>原文链接: <a href="https://rearcher.github.io/perceptron.html">https://rearcher.github.io/perceptron.html</a>
+            <p>发表日期: <a href="https://rearcher.github.io/perceptron.html">December 6th 2018, 4:12:21 pm</a>
             <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
     
@@ -434,17 +442,12 @@ height:50vh;
     <ul class="post-paginator">
         <li class="next">
             
-                <div class="nextSlogan">Next Post</div>
-                <a href= "/k_nearest_neighbors.html" title= 用python实现k近邻、kd树搜索 >
-                    <div class="nextTitle">用python实现k近邻、kd树搜索</div>
-                </a>
-            
         </li>
         <li class="previous">
             
                 <div class="prevSlogan">Previous Post</div>
-                <a href= "/linear_regression.html" title= 用python实现线性回归 >
-                    <div class="prevTitle">用python实现线性回归</div>
+                <a href= "/interesting-knapsack-problem.html" title= 有趣的背包问题 >
+                    <div class="prevTitle">有趣的背包问题</div>
                 </a>
             
         </li>
@@ -461,8 +464,8 @@ height:50vh;
     *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
         
         var disqus_config = function () {
-        this.page.url = "https://rearcher.github.io/logistic_regression.html";  // Replace PAGE_URL with your page's canonical URL variable
-        this.page.identifier = "用python实现逻辑回归"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        this.page.url = "https://rearcher.github.io/perceptron.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "用python实现感知机算法"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
         };
         
         (function () { // DON'T EDIT BELOW THIS LINE
@@ -554,7 +557,7 @@ top:50vh;
         <div class="toc-catalog">
             <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
         </div>
-        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#基本形式"><span class="toc-number">1.</span> <span class="toc-text">基本形式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模型求解"><span class="toc-number">2.</span> <span class="toc-text">模型求解</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#模型实现"><span class="toc-number">3.</span> <span class="toc-text">模型实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li></ol>
+        <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#学习策略"><span class="toc-number">1.</span> <span class="toc-text">学习策略</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#学习算法"><span class="toc-number">2.</span> <span class="toc-text">学习算法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原始形式"><span class="toc-number">2.1.</span> <span class="toc-text">原始形式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#对偶形式"><span class="toc-number">2.2.</span> <span class="toc-text">对偶形式</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#代码实现"><span class="toc-number">3.</span> <span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#总结"><span class="toc-number">4.</span> <span class="toc-text">总结</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#参考"><span class="toc-number">5.</span> <span class="toc-text">参考</span></a></li></ol>
     </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>

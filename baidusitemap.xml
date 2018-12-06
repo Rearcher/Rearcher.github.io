@@ -4,6 +4,50 @@
 
     
   <url>
+    <loc>https://rearcher.github.io/perceptron.html</loc>
+    <lastmod>2018-12-06T08:51:25.732Z</lastmod>
+    <data>
+        <display>
+        <title>用python实现感知机算法</title>
+        <pubTime>2018-12-06T08:12:21.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://rearcher.github.io/naive_bayes.html</loc>
+    <lastmod>2018-12-06T08:47:32.800Z</lastmod>
+    <data>
+        <display>
+        <title>用python实现朴素贝叶斯分类算法</title>
+        <pubTime>2018-04-24T07:08:19.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://rearcher.github.io/k_nearest_neighbors.html</loc>
     <lastmod>2018-12-04T15:02:32.025Z</lastmod>
     <data>
@@ -61,28 +105,6 @@
            
              
               <breadCrumb title="算法" url="https://rearcher.github.io/categories/%E7%AE%97%E6%B3%95/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://rearcher.github.io/naive_bayes.html</loc>
-    <lastmod>2018-04-24T09:11:04.544Z</lastmod>
-    <data>
-        <display>
-        <title>用python实现朴素贝叶斯分类算法</title>
-        <pubTime>2018-04-24T07:08:19.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>机器学习</tag>
-         
-         
-           
-             
-              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
           
         </display>
     </data>

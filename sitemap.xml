@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://rearcher.github.io/perceptron.html</loc>
+    
+    <lastmod>2018-12-06T08:51:25.732Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://rearcher.github.io/naive_bayes.html</loc>
+    
+    <lastmod>2018-12-06T08:47:32.800Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://rearcher.github.io/k_nearest_neighbors.html</loc>
     
     <lastmod>2018-12-04T15:02:32.025Z</lastmod>
@@ -19,13 +33,6 @@
     <loc>https://rearcher.github.io/bit-logn-range-update.html</loc>
     
     <lastmod>2018-07-27T09:28:27.259Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://rearcher.github.io/naive_bayes.html</loc>
-    
-    <lastmod>2018-04-24T09:11:04.544Z</lastmod>
     
   </url>
   
