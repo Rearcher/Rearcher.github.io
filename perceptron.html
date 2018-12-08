@@ -269,7 +269,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,162</span> / Reading time: <span class="post-count">5 min</span></span>
+                        <span>Word count: <span class="post-count">1,158</span> / Reading time: <span class="post-count">5 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -422,7 +422,7 @@ b = \sum_{i=1}^N \alpha_i y_i
 b \gets b + \eta y_i
 \end{gathered}</script><p>对偶形式中，需要计算向量$x$之间的内积，因此可以提前算出来，并以矩阵的形式存储，这个矩阵也称为Gram矩阵。</p>
 <h2 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h2><p>下面用python实现三维空间上的感知机算法，即输入空间是3维的，感知机方程则表示三维空间中的一个平面。代码中随机生成一个三维平面，接着随机生成平面两侧的数据点用于感知机算法的拟合，然后分别用accuracy、precision、recall来评判拟合的效果，以及用可视化的方式来展示拟合的状态。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Perceptron</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit</span><span class="params">(self, X, y, n_iterations=<span class="number">1000</span>, learning_rate=<span class="number">1</span>)</span>:</span></span><br><span class="line">        <span class="string">"""感知机训练算法的原始形式</span></span><br><span class="line"><span class="string">        Args:</span></span><br><span class="line"><span class="string">            X: 输入的特征</span></span><br><span class="line"><span class="string">            y: 输入的标签&#123;-1, 1&#125;</span></span><br><span class="line"><span class="string">            n_iterations: 算法迭代次数</span></span><br><span class="line"><span class="string">            learning_rate: 学习速率</span></span><br><span class="line"><span class="string">        """</span></span><br><span class="line">        n, m = X.shape</span><br><span class="line">        self.w, self.b = np.zeros((<span class="number">3</span>, <span class="number">1</span>)), <span class="number">0</span></span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(range(n_iterations)):</span><br><span class="line">            idx = np.random.randint(<span class="number">0</span>, n)</span><br><span class="line">            <span class="keyword">if</span> y[idx] * (np.vdot(self.w, X[idx].reshape(<span class="number">3</span>, <span class="number">1</span>)) + self.b) &lt;= <span class="number">0</span>:</span><br><span class="line">                self.w += learning_rate * y[idx] * X[idx].reshape(<span class="number">3</span>, <span class="number">1</span>)</span><br><span class="line">                self.b += learning_rate * y[idx]</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">fit_dual</span><span class="params">(self, X, y, n_iterations=<span class="number">1000</span>, learning_rate=<span class="number">1</span>)</span>:</span></span><br><span class="line">        <span class="string">"""感知机训练算法的对偶形式"""</span></span><br><span class="line">        n, m = X.shape</span><br><span class="line">        self.alpha, self.b = np.zeros((n, <span class="number">1</span>)), <span class="number">0</span></span><br><span class="line">        self.gram = np.zeros((n, n))</span><br><span class="line"></span><br><span class="line">        <span class="comment"># 计算Gram相关性矩阵</span></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">0</span>, n):</span><br><span class="line">            self.gram[i][i] = <span class="number">1</span></span><br><span class="line">            <span class="keyword">for</span> j <span class="keyword">in</span> range(i + <span class="number">1</span>, n):</span><br><span class="line">                self.gram[i][j] = self.gram[j][i] = np.vdot(X[i].reshape(<span class="number">3</span>, <span class="number">1</span>), X[j].reshape(<span class="number">3</span>, <span class="number">1</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> tqdm(range(n_iterations)):</span><br><span class="line">            idx = np.random.randint(<span class="number">0</span>, n)</span><br><span class="line">            <span class="keyword">if</span> y[idx] * (sum(self.alpha * y * self.gram[:, idx].reshape(<span class="number">-1</span>, <span class="number">1</span>)) + self.b) &lt;= <span class="number">0</span>:</span><br><span class="line">                self.alpha[idx][<span class="number">0</span>] += learning_rate</span><br><span class="line">                self.b += learning_rate * y[idx]</span><br><span class="line">        self.w = sum(self.alpha * y * X).reshape(<span class="number">-1</span>, <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">predict</span><span class="params">(self, X)</span>:</span></span><br><span class="line">        <span class="string">"""预测"""</span></span><br><span class="line">        y = (np.dot(X, self.w) + self.b).reshape(<span class="number">-1</span>, <span class="number">1</span>)</span><br><span class="line">        n, _ = y.shape</span><br><span class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> range(n):</span><br><span class="line">            y[i][<span class="number">0</span>] = sign(y[i][<span class="number">0</span>])</span><br><span class="line">        <span class="keyword">return</span> y</span><br></pre></td></tr></table></figure></p>
-<p>可以看到最后程序输出的accuracy、precision、recall都可以达到1.0，说明拟合效果很好。下图展示了拟合的效果，其中黄色的平面代表用于生成随机数的平面，绿色的平面代表拟合的平面。不同类的数据点都分布于平面的两侧。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fxx48c5medj30p40mujtz.jpg" alt="result"><br>完整代码在<a href="https://github.com/rearcher/template/blob/master/ml/perceptron.py" target="_blank" rel="noopener">这里</a>。</p>
+<p>最后程序输出的accuracy、precision、recall都可以达到1.0，说明拟合效果很好。下图展示了拟合的效果，其中黄色的平面代表用于生成随机数的平面，绿色的平面代表拟合的平面。不同类的数据点都分布于平面的两侧。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1fxx48c5medj30p40mujtz.jpg" alt="result"><br>完整代码在<a href="https://github.com/rearcher/template/blob/master/ml/perceptron.py" target="_blank" rel="noopener">这里</a>。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本文实现了输入空间是三维的感知机算法，实现了原始形式的学习算法和对偶形式的学习算法。对于更高维的输入，也可以采取类似的方式实现。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
 <li><a href="https://book.douban.com/subject/10590856/" target="_blank" rel="noopener">《统计学习方法》</a></li>
@@ -730,6 +730,10 @@ top:50vh;
     
     
     
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
         Total : 14
@@ -830,11 +834,11 @@ top:50vh;
         <div class="sidebar-panel-tags">
     <div class="sidebar-tags-name">
     
-        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
-    
         <span class="sidebar-tag-name" data-tags="背包问题"><span class="iconfont-archer">&#xe606;</span>背包问题</span>
     
         <span class="sidebar-tag-name" data-tags="动态规划"><span class="iconfont-archer">&#xe606;</span>动态规划</span>
+    
+        <span class="sidebar-tag-name" data-tags="算法"><span class="iconfont-archer">&#xe606;</span>算法</span>
     
         <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
     
@@ -891,9 +895,9 @@ jsonContent:
     
         <span class="sidebar-category-name" data-categories="算法"><span class="iconfont-archer">&#xe60a;</span>算法</span>
     
-        <span class="sidebar-category-name" data-categories="机器学习"><span class="iconfont-archer">&#xe60a;</span>机器学习</span>
-    
         <span class="sidebar-category-name" data-categories="java"><span class="iconfont-archer">&#xe60a;</span>java</span>
+    
+        <span class="sidebar-category-name" data-categories="机器学习"><span class="iconfont-archer">&#xe60a;</span>机器学习</span>
     
         <span class="sidebar-category-name" data-categories="随笔"><span class="iconfont-archer">&#xe60a;</span>随笔</span>
     
