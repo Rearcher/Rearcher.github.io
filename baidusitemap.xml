@@ -4,6 +4,48 @@
 
     
   <url>
+    <loc>https://rearcher.github.io/svm-fundamentals.html</loc>
+    <lastmod>2018-12-29T16:01:46.749Z</lastmod>
+    <data>
+        <display>
+        <title>支持向量机原理整理</title>
+        <pubTime>2018-12-28T06:28:32.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://rearcher.github.io/svm-implemented-in-python.html</loc>
+    <lastmod>2018-12-29T15:59:06.593Z</lastmod>
+    <data>
+        <display>
+        <title>用python实现支持向量机</title>
+        <pubTime>2018-12-29T14:55:24.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://rearcher.github.io/decision-tree.html</loc>
     <lastmod>2018-12-14T15:47:31.217Z</lastmod>
     <data>

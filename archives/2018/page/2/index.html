@@ -339,136 +339,6 @@
     
     
     <article class="index-post">
-        <a class="abstract-title" href = "/naive_bayes.html" >
-            
-                <span>用python实现朴素贝叶斯分类算法</span>
-        </a>
-        <div class="abstract-content">
-            简介朴素贝叶斯算法主要用于分类问题，原理十分简单，主要采用后验概率最大化的方法来判定测试样本的类别。对于某个给定的测试样本$ x = \{x_1,…,x_n\} $，其类别为$y$的概率可以通过贝叶斯公式计算：
-P(y|x_1,...,x_n) = \frac{P(y)P(x_1,...,x_n|y)}{P(x_1,...,x_n)}其中$P(y)$是类别$y$的先验概率，$P(x_1,…,x_n|y)$是条件概率。后验概率最大化就是找出能够使得$P(y|x_1,…,x_n)$最大的类别$y$。
-由于朴素贝叶斯算法假设各个特征之间相互独立，所以可以得到下面的公式：
-P(x_1,...,x...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/k_nearest_neighbors.html" >
-            
-                <span>用python实现k近邻、kd树搜索</span>
-        </a>
-        <div class="abstract-content">
-            简介k近邻算法是一种非常简单、直观的算法：给定一个数据集，对于新的输入实例，在训练数据集中找到与该实例最近的k个实例，这k个实例的多数属于某个类，就把该新的输入实例分为这个类。
-这里主要涉及到两个问题：一是实例间的距离度量，二是如何找到所有训练数据集中最靠近新的输入实例的k个实例。常用的距离度量有欧氏距离（Euclidean Distance）和Minkowski距离等，本文实现的k近邻算法就采用了欧氏距离。至于如何找到靠近输入实例最近的k个实例，一种比较朴素的实现方式是对整个训练数据集进行线性扫描，维护一个大小为k的优先队列，保存距离输入实例最近的k个实例点，也俗称暴力搜索，但是当训练...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/22</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/logistic_regression.html" >
-            
-                <span>用python实现逻辑回归</span>
-        </a>
-        <div class="abstract-content">
-            基本形式逻辑回归主要用于解决分类问题。逻辑回归函数的输出是一个处于0-1之间的值，代表输出是1的概率。\begin{align}&amp; h_\theta(x) = P(y=1 | x ; \theta) = 1 - P(y=0 | x ; \theta) \newline&amp; P(y = 0 | x;\theta) + P(y = 1 | x ; \theta) = 1\end{align}
-基本形式如下：\begin{align}&amp; h_\theta (x) =  g ( \theta^T x ) \newline \newline&amp; z = \theta^T...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/linear_regression.html" >
-            
-                <span>用python实现线性回归</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="基本形式"><a href="#基本形式" class="headerlink" title="基本形式"></a>基本形式</h2><p>线性回归基本形式：</p>
-<script type="math/tex; mode=display">h_\theta (x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 + \cdots + \theta_n x_n</script><p>其中$ \theta $代表参数， $ \theta_0 $就是通常说的偏置bias。$ x_n $代表特征，如果$ n = 1 $，则是一元线性回归；$ n &gt; 1 $时是多元线性回归。<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/16</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
         <a class="abstract-title" href = "/coursera-ml-summary.html" >
             
                 <span>Andrew Ng《machine learning》小结</span>
@@ -495,6 +365,10 @@ P(x_1,...,x...
     </article>
     
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <a class="extend prev" rel="prev" href="/archives/2018/">&#60; PREV</a><a class="page-number" href="/archives/2018/">1</a><span class="page-number current">2</span>
+    </nav>
     
 </main>
             <!-- profile -->

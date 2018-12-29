@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://rearcher.github.io/svm-fundamentals.html</loc>
+    
+    <lastmod>2018-12-29T16:01:46.749Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://rearcher.github.io/svm-implemented-in-python.html</loc>
+    
+    <lastmod>2018-12-29T15:59:06.593Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://rearcher.github.io/decision-tree.html</loc>
     
     <lastmod>2018-12-14T15:47:31.217Z</lastmod>
