@@ -404,7 +404,7 @@ height:50vh;
 <script type="math/tex; mode=display">H(Y|X) = \sum_{i=1}^n p_i H(Y|X=x_i)</script><p><strong>信息增益</strong>：特征A对训练数据集D的信息增益$g(D,A)$，定义为集合D的经验熵$H(D)$与特征A给定条件下D的经验条件熵$H(D|A)$之差，即</p>
 <script type="math/tex; mode=display">g(D, A) = H(D) - H(D|A)</script><p>熵$H(D)$与条件熵$H(D|A)$之差也称为互信息。设训练数据集为D，$|D|$表示为样本容量；设有K个类，$|C_k|$表示属于第k类的样本个数；设特征A的取值有n个，根据特征A的取值可以将D划分为n个不同的子集$D_1,D_2,…,D_n$，$|D_i|$为子集$D_i$中的样本个数；记子集$D_i$中属于第k类的样本集合为$D_{ik}$，信息增益可以通过如下公式计算：</p>
 <script type="math/tex; mode=display">\begin{gathered}
-H(D) = - \sum_{k=1}^K \frac{|C_k|}{|D|} \log_2 \frac{C_k}{|D|} \\
+H(D) = - \sum_{k=1}^K \frac{|C_k|}{|D|} \log_2 \frac{|C_k|}{|D|} \\
 H(D|A) = \sum_{i=1}^n \frac{|D_i|}{|D|} H(D_i) \\
 g(D, A) = H(D) - H(D|A)
 \end{gathered}</script><p><strong>信息增益比</strong>：以信息增益作为划分训练数据集的特征，存在偏向于选择取值较多的特征的问题，使用信息增益比可以对这一问题进行校正，信息增益比通过如下公式计算：</p>
@@ -575,12 +575,6 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
-    
-    
-    
-    
-    
-    
     
     
     

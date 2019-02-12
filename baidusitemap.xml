@@ -4,6 +4,28 @@
 
     
   <url>
+    <loc>https://rearcher.github.io/decision-tree.html</loc>
+    <lastmod>2019-02-12T10:30:30.019Z</lastmod>
+    <data>
+        <display>
+        <title>用python实现决策树</title>
+        <pubTime>2018-12-14T14:57:21.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://rearcher.github.io/svm-fundamentals.html</loc>
     <lastmod>2018-12-29T16:01:46.749Z</lastmod>
     <data>
@@ -30,28 +52,6 @@
         <display>
         <title>用python实现支持向量机</title>
         <pubTime>2018-12-29T14:55:24.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>机器学习</tag>
-         
-         
-           
-             
-              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://rearcher.github.io/decision-tree.html</loc>
-    <lastmod>2018-12-14T15:47:31.217Z</lastmod>
-    <data>
-        <display>
-        <title>用python实现决策树</title>
-        <pubTime>2018-12-14T14:57:21.000Z</pubTime>
         
         <tag>python</tag>
          
