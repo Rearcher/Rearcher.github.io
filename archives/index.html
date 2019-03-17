@@ -339,6 +339,39 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/ml-target-encoding.html" >
+            
+                <span>机器学习比赛中常用的Target Encoding</span>
+        </a>
+        <div class="abstract-content">
+            最近在做机器学习比赛的时候，遇到了Target Encoding。所谓Target Encoding，是一种特征工程方式，根据训练集中的标签信息生成特征，来提高模型的性能。比较常见的是对于二分类问题（即需要预测的标签是0和1），根据训练集中的某一列特征对训练集进行groupby操作，然后计算每个分组内标签的均值，作为新的特征。
+例如下图中，根据原始特征id，生成了id_target_mean这一列均值特征。
+上图展示的是最朴素的一种办法，这种办法非常直观，但是常常不work，带来的最明显的问题就是过拟合，训练集分数会飙升，而验证集的分数会剧烈下降。但Target Encoding确实是一...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/17</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/svm-implemented-in-python.html" >
             
                 <span>用python实现支持向量机</span>
@@ -642,38 +675,6 @@ P(x_1,...,x...
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/linear_regression.html" >
-            
-                <span>用python实现线性回归</span>
-        </a>
-        <div class="abstract-content">
-            <h2 id="基本形式"><a href="#基本形式" class="headerlink" title="基本形式"></a>基本形式</h2><p>线性回归基本形式：</p>
-<script type="math/tex; mode=display">h_\theta (x) = \theta_0 + \theta_1 x_1 + \theta_2 x_2 + \theta_3 x_3 + \cdots + \theta_n x_n</script><p>其中$ \theta $代表参数， $ \theta_0 $就是通常说的偏置bias。$ x_n $代表特征，如果$ n = 1 $，则是一元线性回归；$ n &gt; 1 $时是多元线性回归。<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/16</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
@@ -937,9 +938,22 @@ P(x_1,...,x...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 17
+        Total : 18
         </div>
         <!-- search  -->
         
@@ -949,6 +963,20 @@ P(x_1,...,x...
     
     
     
+    
+    <div class="archive-year"> 2019 </div>
+    <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/17</span><a class="archive-post-title" href= "/ml-target-encoding.html" >机器学习比赛中常用的Target Encoding</a>
+        </li>
+    
+    
+    
+    
+    
+        </ul>
     
     <div class="archive-year"> 2018 </div>
     <ul class="year-list">

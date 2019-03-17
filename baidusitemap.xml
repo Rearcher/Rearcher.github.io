@@ -4,8 +4,30 @@
 
     
   <url>
+    <loc>https://rearcher.github.io/ml-target-encoding.html</loc>
+    <lastmod>2019-03-17T13:53:32.222Z</lastmod>
+    <data>
+        <display>
+        <title>机器学习比赛中常用的Target Encoding</title>
+        <pubTime>2019-03-17T13:10:04.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://rearcher.github.io/decision-tree.html</loc>
-    <lastmod>2019-02-12T10:30:30.019Z</lastmod>
+    <lastmod>2019-02-12T10:32:43.942Z</lastmod>
     <data>
         <display>
         <title>用python实现决策树</title>

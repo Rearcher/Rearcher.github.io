@@ -1,3 +1,3 @@
+https://rearcher.github.io/ml-target-encoding.html
 https://rearcher.github.io/svm-implemented-in-python.html
 https://rearcher.github.io/svm-fundamentals.html
-https://rearcher.github.io/decision-tree.html
