@@ -6,7 +6,7 @@
 
 
 <head>
-    <meta charset="utf-8">
+    <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" >
     <meta name="author" content="Rahul">
     <meta name="renderer" content="webkit">
@@ -15,7 +15,7 @@
     <meta name="description" content="">
     <meta name="Cache-Control" content="no-cache">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <title>Life&#39;s monolog</title>
+    <title>微软（苏州）暑期实习面试小记 · Life&#39;s monolog</title>
     <style type="text/css">
     @font-face {
         font-family: 'Oswald-Regular';
@@ -70,6 +70,8 @@
 
     <link rel="preload" href= /css/style.css?v=20180721 as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <link rel="stylesheet" href= /css/mobile.css?v=20180721 media="(max-width: 980px)">
+    
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     
     <!-- /*! loadCSS. [c]2017 Filament Group, Inc. MIT License */
 /* This file is meant as a standalone workflow for
@@ -189,17 +191,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" defer></script>
     <!-- 百度统计  -->
     
-    <!-- 谷歌统计  -->
+    <!-- 谷歌统计  --><!-- hexo-inject:begin --><!-- hexo-inject:end -->
     
 </head>
 
     
+        <body class="post-body">
     
-<header class="header">
+    
+<!-- hexo-inject:begin --><!-- hexo-inject:end --><header class="header">
 
     <div class="read-progress"></div>
     <div class="header-sidebar-menu">&#xe775;</div>
     <!-- post页的toggle banner  -->
+    
+    <div class="banner">
+            <div class="blog-title">
+                <a href="/" >Life&#39;s monolog</a>
+            </div>
+            <div class="post-title">
+                <a href="#" class="post-name">微软（苏州）暑期实习面试小记</a>
+            </div>
+    </div>
     
     <a class="home-link" href=/>Life's monolog</a>
 </header>
@@ -213,24 +226,69 @@
 
 
 
+height:50vh;
+
 >
     
     <!-- 主页  -->
+    
+    
+    <!-- 404页  -->
             
     <div class="site-intro-placeholder"></div>
-    <div class="site-intro-img" style="background-image: url(/)"></div>
+    <div class="site-intro-img" style="background-image: url(/intro/my-index-bg.jpg)"></div>
     <div class="site-intro-meta">
         <!-- 标题  -->
         <h1 class="intro-title">
             <!-- 主页  -->
+            
+            微软（苏州）暑期实习面试小记
+            <!-- 404 -->
             
         </h1>
         <!-- 副标题 -->
         <p class="intro-subtitle">
             <!-- 主页副标题  -->
             
+            
+            <!-- 404 -->
+            
         </p>
         <!-- 文章页meta -->
+        
+            <div class="post-intros">
+                <!-- 文章页标签  -->
+                
+                    <div class= post-intro-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "算法">算法</a>
+    
+</div>
+                
+                
+                    <div class="post-intro-read">
+                        <span>Word count: <span class="post-count">1,803</span> / Reading time: <span class="post-count">6 min</span></span>
+                    </div>
+                
+                <div class="post-intro-meta">
+                    <span class="post-intro-calander iconfont-archer">&#xe676;</span>
+                    <span class="post-intro-time">2019/03/21</span>
+                    
+                    <span class="shareWrapper">
+                        <span class="iconfont-archer shareIcon">&#xe71d;</span>
+                        <span class="shareText">Share</span>
+                        <ul class="shareList">
+                            <li class="iconfont-archer share-qr" data-type="qr">&#xe75b;
+                                <div class="share-qrcode"></div>
+                            </li>
+                            <li class="iconfont-archer" data-type="weibo">&#xe619;</li>
+                            <li class="iconfont-archer" data-type="qzone">&#xe62e;</li>
+                            <li class="iconfont-archer" data-type="twitter">&#xe634;</li>
+                            <li class="iconfont-archer" data-type="facebook">&#xe67a;</li>
+                        </ul>
+                    </span>
+                </div>
+            </div>
         
     </div>
 </div>
@@ -331,65 +389,95 @@
 </script>        
         <img class="loading" src="/assets/loading.svg" style="display: block; margin: 6rem auto 0 auto; width: 6rem; height: 6rem;" />
         <div class="container container-unloaded">
-            <main class="main index-page">
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/simple-java-thread-pool.html" >
-            
-                <span>Java线程池的简单实现</span>
-        </a>
-        <div class="abstract-content">
-            <p>最近在写Java程序的时候，接触到一些多线程方面的东西，用到了Java中的线程池。JDK中对线程池的支持比较完善，在<code>java.util.concurrent</code>包中，用<code>ThreadPoolExecuter</code>类表示一个线程池，同时还有一个<code>Executor</code>类扮演着线程池工厂的角色。例如：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newFixedThreadPool</span><span class="params">(<span class="keyword">int</span> nThreads)</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newSingleThreadExecutor</span><span class="params">()</span></span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ExecutorService <span class="title">newCachedThreadPool</span><span class="params">()</span></span></span><br><span class="line"><span class="function">...</span></span><br></pre></td></tr></table></figure>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/07/20</span>
-            </div>
-            <!-- tags  -->
-            
-        </div>
+            <main class="main post-page">
+    <article class="article-entry">
+        <p>前段时间春招都陆陆续续开始了，我也投了一些公司，反馈都比较慢，反而之后投的微软安排很快，两周之内就收到了onsite面试通知，当然是选择接受。投递的岗位是微软官网挂出来的Data Mining/Algorithm/Machine Learning Scientist Intern，因为秋招想找算法岗，所以实习也想找一找相关的，奈何现在又缺乏拿得出手的算法经历，不过好在听说微软面试只问算法题，这也是我投递微软的一个原因吧。</p>
+<p>辗转到了苏州之后，直奔微软。在旁边随便找了家餐厅解决了午饭，随后随便逛了逛，看时间差不多就去微软前台报到了，随后面试官下来带我去面试房间。第一面是一个非常和蔼可亲的小哥，和他说话有一种很舒服的感觉，随便聊了聊简历，然后开始做算法题。因为看我简历上写了自己实现过各种机器学习算法，然后说到了线性回归，问我熟不熟悉最小二乘，我说熟悉。然后他出的第一道题目是：</p>
+<blockquote>
+<p>在二维平面上给出一堆点，要求用分段最小二乘的形式，求出最优的拟合方案。即可以用多条直线拟合这些点，每多增加一条直线，总的损失会增加一个常数C。</p>
+</blockquote>
+<p>一开始确实大脑一片空白，然后给出了一个贪心的解法，面试官提出这种解法不一定能得到最优值，然后想到了用动态规划来求解，面试官听完比较满意，然后就是手写代码。第一次手写代码偷懒，有很多不规范的地方，面试官也给我指出了。后来就是出了第二道题：</p>
+<blockquote>
+<p>有G个组，给出每组的人数，同时有T张桌子，每张桌子最多可以坐10个人，并且同一组的人不能坐在同一张桌子上，问如何判断是否有解？</p>
+</blockquote>
+<p>这道题我想了一段时间没什么思路，然后面试官提示可以往图论方向思考，我说图论不太熟，他就换了个比较简单的搜索题：</p>
+<blockquote>
+<p>给定二维平面上的一堆点，给定距离d，距离不超过d的点可以归为一类，要求输出总共有几类点，并且给出每一类里有哪些点。</p>
+</blockquote>
+<p>这道题用简单的深度优先搜索就可以求解，跟面试官说了思路之后还是要手写代码，顺利通过。然后一面所剩时间也不多了，面试官还善意地提醒了我一些要注意的点，主要是代码规范方面的问题，说有的面试官可能比较在意（后来视频三面才深切体会到这位面试官的良苦用心）。</p>
+<p>然后是第二面，第二面的面试官有点高冷的感觉，同样是上来随便聊了聊简历，然后开始做题。二面只做了一道题：</p>
+<blockquote>
+<p>给定一个二维数组，代表一个滑雪场。二维数组中的数字代表滑雪场对应地方的海拔高度。规定滑雪只能从高处滑向低处（两处相等也不能滑），求最长的滑雪距离。</p>
+</blockquote>
+<p>咋一看是一道搜索题，跟面试官讨论了一下可以直接遍历深搜，但是时间复杂度比较大。面试官说可以先认为数据量很小，然后就让我手写了最原始的暴搜版本。接着分析了时间复杂度和空间复杂度，然后提出对当前版本的优化。思考了一下可以用记忆化搜索，面试官听了思路表示赞同，然后又是手写代码，因为是对上一版本的修修补补，所以很乱，实现的也不够优雅，有点“曲线救国”的感觉，后来又写了一版较优雅的版本，面试官看了也点头表示赞同。不知不觉二面的一个小时就这样过去了。最后问了面试官所在部门，以及实习生一般做什么工作，多久会有后续通知，onsite两面至此结束。</p>
+<p>然后找苏州的小伙伴一起吃晚饭，路上一直觉得二面没发挥好，有点遗憾。正和小伙伴在餐厅闲聊，就收到了微软的三面邮件通知，是线上面试。三面前向之前在微软实习的学姐打听了一下，说三面是manager面，一般就是聊一下，然后也会问算法题，也会问开放性问题。我早早的来到了微软的网上面试房间，等待面试开始。后来面试官来了，听声音也是很和蔼，一直在笑，问我有没有准备英文面试，有点突然，也只好硬着头皮上，跟面试官进行了简单的英文对话，问题类似于爱好、对微软的了解之类的，现在回想起来当时答得都不太好，应该多聊几句。然后面试官给了一个链接用于在线写代码，他那边可以同步看到。面试官给的问题非常简单：</p>
+<blockquote>
+<p>给出年月日三个数字，要求输出是那一年的第几天。</p>
+</blockquote>
+<p>我三下五除二就写好了代码，面试官直接说你这个代码有问题，会crash。我找了半天，急的直冒汗，然后问他输入是否一直合法，他反问道“你说呢？”当时就有种不好的预感，平时刷算法题输入输出范围都是规定好的，突然来这么一出还确实有点不适应。然后加了输入合法性判断，并且在面试官的提醒下改了判断是否是闰年的bug。然后面试官说这个代码能用，但是不太好，还可以改进。我急的直冒汗，想了一会儿问他是不是代码风格方面的问题，他说算是吧。之后又是修修补补，他都说没改到点子上。就这样过去了40分钟，面试官说时间也不多了，第二题也来不及问了，我们就结束吧，我连忙问他我有哪些需要改进的地方（内心戏是想死的明明白白），他说是代码规范的问题，比如函数的命名、返回的类型等，并且建议我多去看一看不同语言的编码规范。</p>
+<p>三面面完心情极度低落，但晚上六点多却收到了通过面试的邮件，不得不感叹微软效率之高，自己的运气还不错。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1g1autscj3ij30ku0uxmyw.jpg" alt="interview-passed"></p>
+<p>总的来说，微软的面试体验还是很棒的，这次面试也学到了不少东西，希望自己以后与人交流的时候能少点紧张，展现出自己应有的水平，秋招有个满意的结果吧。</p>
+
     </article>
+    <!-- license  -->
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/myjvm.html" >
-            
-                <span>我理解中的JVM</span>
-        </a>
-        <div class="abstract-content">
-            <p>前阵子amazon搞优惠活动，随便浏览了一下，发现了几本想看的书，其中一本就是<a href="https://book.douban.com/subject/26802084/" target="_blank" rel="noopener">《自己动手写Java虚拟机》</a>，一是最近正好在学java，二是对go语言比较好奇，于是就下单了。书挺薄的，300页不到，期末考完花了一个多星期的时间看完了，本文算是对这本书的一点总结吧。<br>
+        <div class="license-wrapper">
+            <p>原文作者: <a href="https://rearcher.github.io">Rahul</a>
+            <p>原文链接: <a href="https://rearcher.github.io/microsoft-summer-intern.html">https://rearcher.github.io/microsoft-summer-intern.html</a>
+            <p>发表日期: <a href="https://rearcher.github.io/microsoft-summer-intern.html">March 21st 2019, 10:57:13 pm</a>
+            <p>版权声明: 本文采用<a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/">知识共享署名-非商业性使用 4.0 国际许可协议</a>进行许可</p>
         </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2016/07/18</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "go">go</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "jvm">jvm</a>
-    
-</div>
-            
-        </div>
-    </article>
     
     <!-- paginator  -->
+    <ul class="post-paginator">
+        <li class="next">
+            
+        </li>
+        <li class="previous">
+            
+                <div class="prevSlogan">Previous Post</div>
+                <a href= "/ml-target-encoding.html" title= 机器学习比赛中常用的Target Encoding >
+                    <div class="prevTitle">机器学习比赛中常用的Target Encoding</div>
+                </a>
+            
+        </li>
+    </ul>
+    <!-- 评论插件 -->
+    <!-- 来必力City版安装代码 -->
+
+<!-- City版安装代码已完成 -->
     
+    <div id="disqus_thread"></div>
+    <script>
+        /**
+    *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+    *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+        
+        var disqus_config = function () {
+        this.page.url = "https://rearcher.github.io/microsoft-summer-intern.html";  // Replace PAGE_URL with your page's canonical URL variable
+        this.page.identifier = "微软（苏州）暑期实习面试小记"; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+        };
+        
+        (function () { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://rearcher-github-io.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    
+    <!--PC和WAP自适应版-->
+
+    <!--PC版-->
+
+
+    
+    
+
+    <!-- 评论 -->
 </main>
             <!-- profile -->
             
@@ -436,6 +524,24 @@
 </footer>
     </div>
     <!-- toc -->
+    
+    <div class="toc-wrapper" style=
+    
+
+
+
+
+
+
+
+top:50vh;
+
+    >
+        <div class="toc-catalog">
+            <span class="iconfont-archer catalog-icon">&#xe613;</span><span>CATALOG</span>
+        </div>
+        
+    </div>
     
     <div class="back-top iconfont-archer">&#xe639;</div>
     <div class="sidebar sidebar-hide">
@@ -897,6 +1003,8 @@ jsonContent:
     
     </div>
     <!-- async load share.js -->
+    
+        <script src="/scripts/share.js" async></script>    
      
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
@@ -913,7 +1021,7 @@ jsonContent:
     });
 </script>
 <!-- <script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script> -->
-<script src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src="https://cdn.bootcss.com/mathjax/2.7.3/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- hexo-inject:end -->
 
 </body>
 </html>

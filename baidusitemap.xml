@@ -4,8 +4,28 @@
 
     
   <url>
+    <loc>https://rearcher.github.io/microsoft-summer-intern.html</loc>
+    <lastmod>2019-03-21T15:58:06.278Z</lastmod>
+    <data>
+        <display>
+        <title>微软（苏州）暑期实习面试小记</title>
+        <pubTime>2019-03-21T14:57:13.000Z</pubTime>
+        
+        <tag>算法</tag>
+         
+         
+           
+             
+              <breadCrumb title="求职" url="https://rearcher.github.io/categories/%E6%B1%82%E8%81%8C/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://rearcher.github.io/ml-target-encoding.html</loc>
-    <lastmod>2019-03-17T13:53:32.222Z</lastmod>
+    <lastmod>2019-03-21T14:56:49.695Z</lastmod>
     <data>
         <display>
         <title>机器学习比赛中常用的Target Encoding</title>
