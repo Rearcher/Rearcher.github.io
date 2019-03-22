@@ -354,6 +354,36 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/dropout-and-batch-normalization.html" >
+            
+                <span>浅谈Dropout与Batch Normalization</span>
+        </a>
+        <div class="abstract-content">
+            DropoutDropout是一种防止神经网络过拟合的技术，它是指神经网络在训练的过程中，里面的节点会以概率p失活。所以Dropout相当于同时训练了很多个子网络，最后的结果是多个模型平均的结果，增强了模型的泛化能力，因此能够解决过拟合问题。
+对于Dropout层，假设其中的神经元被保留的概率是p，比较直观的实现是：对于训练过程，根据概率p生成一个与输入向量X大小相同的符合伯努利分布的向量mask（里面都是0和1），然后将X与mask相乘；对于测试过程，因为测试过程没有神经元失活，所以对于某一层，其在测试过程的输出会比在训练过程大很多，所以需要进行rescale，常见的做法就是将这一层的...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "深度学习">深度学习</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/microsoft-summer-intern.html" >
             
                 <span>微软（苏州）暑期实习面试小记</span>
@@ -642,38 +672,6 @@ P(x_1,...,x...
             <!-- date  -->
             <div class="abstract-date">
                 <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/k_nearest_neighbors.html" >
-            
-                <span>用python实现k近邻、kd树搜索</span>
-        </a>
-        <div class="abstract-content">
-            简介k近邻算法是一种非常简单、直观的算法：给定一个数据集，对于新的输入实例，在训练数据集中找到与该实例最近的k个实例，这k个实例的多数属于某个类，就把该新的输入实例分为这个类。
-这里主要涉及到两个问题：一是实例间的距离度量，二是如何找到所有训练数据集中最靠近新的输入实例的k个实例。常用的距离度量有欧氏距离（Euclidean Distance）和Minkowski距离等，本文实现的k近邻算法就采用了欧氏距离。至于如何找到靠近输入实例最近的k个实例，一种比较朴素的实现方式是对整个训练数据集进行线性扫描，维护一个大小为k的优先队列，保存距离输入实例最近的k个实例点，也俗称暴力搜索，但是当训练...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/22</span>
             </div>
             <!-- tags  -->
             
@@ -1015,9 +1013,20 @@ P(x_1,...,x...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 19
+        Total : 20
         </div>
         <!-- search  -->
         
@@ -1030,6 +1039,11 @@ P(x_1,...,x...
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/dropout-and-batch-normalization.html" >浅谈Dropout与Batch Normalization</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1154,6 +1168,8 @@ P(x_1,...,x...
         <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
     
         <span class="sidebar-tag-name" data-tags="机器学习"><span class="iconfont-archer">&#xe606;</span>机器学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="深度学习"><span class="iconfont-archer">&#xe606;</span>深度学习</span>
     
         <span class="sidebar-tag-name" data-tags="背包问题"><span class="iconfont-archer">&#xe606;</span>背包问题</span>
     

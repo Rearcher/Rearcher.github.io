@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>https://rearcher.github.io/dropout-and-batch-normalization.html</loc>
+    <lastmod>2019-03-22T14:53:45.564Z</lastmod>
+    <data>
+        <display>
+        <title>浅谈Dropout与Batch Normalization</title>
+        <pubTime>2019-03-22T14:40:10.000Z</pubTime>
+        
+        <tag>深度学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://rearcher.github.io/microsoft-summer-intern.html</loc>
     <lastmod>2019-03-21T15:58:06.278Z</lastmod>
     <data>

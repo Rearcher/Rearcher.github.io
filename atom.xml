@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://rearcher.github.io/"/>
-  <updated>2019-03-21T15:58:06.278Z</updated>
+  <updated>2019-03-22T14:53:45.564Z</updated>
   <id>https://rearcher.github.io/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>浅谈Dropout与Batch Normalization</title>
+    <link href="https://rearcher.github.io/dropout-and-batch-normalization.html"/>
+    <id>https://rearcher.github.io/dropout-and-batch-normalization.html</id>
+    <published>2019-03-22T14:40:10.000Z</published>
+    <updated>2019-03-22T14:53:45.564Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="Dropout"><a href="#Dropout" class="headerlink" title="Dropout"></a>Dropout</h2><p>Dropout是一种防止神经网络过拟合的技术，它是指神经网络在训练的过程中，里面的节点会以概率p失活。所以Dropout相当于同时训练了很多个子网络，最后的结果是多个模型平均的结果，增强了模型的泛化能力，因此能够解决过拟合问题。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1g1bylkc068j30h2094mym.jpg" alt="dropout"></p><p>对于Dropout层，假设其中的神经元被保留的概率是p，比较直观的实现是：对于训练过程，根据概率p生成一个与输入向量X大小相同的符合伯努利分布的向量mask（里面都是0和1），然后将X与mask相乘；对于测试过程，因为测试过程没有神经元失活，所以对于某一层，其在测试过程的输出会比在训练过程大很多，所以需要进行rescale，常见的做法就是将这一层的输出再乘以p。</p><blockquote><p>为什么测试过程要把输出乘以p？<br>假设当前Dropout层某个神经元的输出是x，则训练过程中，此神经元的期望输出是$px + (1 - p)0$，如果要测试过程时保持与训练过程一致，那么就需要把此神经元的输出x变为px。</p></blockquote><p>上述直观实现的问题在于，增大了模型测试阶段的计算时间。比较常用的实现是inverted dropout，即在训练过程中进行scale，对神经元的输出除以p，来使得训练过程和测试过程神经元的输出保持一致。</p><h2 id="Batch-Normalization"><a href="#Batch-Normalization" class="headerlink" title="Batch Normalization"></a>Batch Normalization</h2><p>深度学习模型训练时，往往需要尝试不同的参数初始化方法、学习率等来使得模型加速收敛。模型参数变化会导致每一层的输入分布发生改变，并且随着网络层数的增加，这种变化会加剧，因此会导致模型训练变得困难。</p><blockquote><p>由于网络中参数变化而引起数据分布发生变化的这一过程被称作Internal Covariate Shift。</p></blockquote><p>Internal Covariate Shift带来问题主要有：上层网络需要不断调整来适应数据分布的变化，导致网络学习速率降低，同时网络的训练容易陷入梯度饱和区，减缓网络收敛速度。</p><p>白化（Whiten）是机器学习中常用的一种规范化数据分布的方法，白化能够降低特征之间的相关性，并且使得特征具有相同的方差。但是在网络的每一层都进行白化操作，计算量太大，并且由于改变了网络每一层数据的分布，因此也降低了网络每层数据的表达能力。批量归一化就是为了解决普通白化的计算量大、改变数据分布的两个问题而提出来的。</p><p>深度学习模型训练往往采取mini batch的形式，批量归一化也是基于mini batch实现的。对每个batch的数据，会进行如下变换：<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1g1bymbhlslj30uk0kiwhf.jpg" alt="bn"></p><p>反向传播的时候，梯度根据链式法则计算：<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1g1bymb9009j30to0goace.jpg" alt="bn-back-propgate"></p><p>一般来说，批量归一化应用在激活函数之前；对于卷积层，如果卷积计算输出多个通道，需要分别对这些通道分别做批量归一化，且每个通道都拥有独立的参数。</p><blockquote><p>批量归一化的优点：</p><ol><li>使得网络中每层输入数据的分布相对稳定，加快模型训练速度；</li><li>使得模型对网络中的参数不再那么敏感，可以使用更大的学习率，简化调参过程，是网络学习更稳定；</li><li>具有一定的正则化效果，不同batch的均值与方差不同，相当于加入了一定的随机噪声。</li></ol></blockquote><h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul><li><a href="https://zh.d2l.ai/chapter_convolutional-neural-networks/batch-norm.html" target="_blank" rel="noopener">动手学深度学习</a></li><li><a href="https://arxiv.org/pdf/1502.03167.pdf" target="_blank" rel="noopener">Batch Normalization</a></li><li><a href="http://ufldl.stanford.edu/wiki/index.php/Whitening" target="_blank" rel="noopener">Whitening</a></li><li><a href="http://cs231n.github.io/neural-networks-2/" target="_blank" rel="noopener">cs231n</a></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      
+      
+        &lt;h2 id=&quot;Dropout&quot;&gt;&lt;a href=&quot;#Dropout&quot; class=&quot;headerlink&quot; title=&quot;Dropout&quot;&gt;&lt;/a&gt;Dropout&lt;/h2&gt;&lt;p&gt;Dropout是一种防止神经网络过拟合的技术，它是指神经网络在训练的过程中，里面的节点会以概率p失活
+      
+    
+    </summary>
+    
+      <category term="机器学习" scheme="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+      <category term="深度学习" scheme="https://rearcher.github.io/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>微软（苏州）暑期实习面试小记</title>

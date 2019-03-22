@@ -339,6 +339,36 @@
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/dropout-and-batch-normalization.html" >
+            
+                <span>浅谈Dropout与Batch Normalization</span>
+        </a>
+        <div class="abstract-content">
+            DropoutDropout是一种防止神经网络过拟合的技术，它是指神经网络在训练的过程中，里面的节点会以概率p失活。所以Dropout相当于同时训练了很多个子网络，最后的结果是多个模型平均的结果，增强了模型的泛化能力，因此能够解决过拟合问题。
+对于Dropout层，假设其中的神经元被保留的概率是p，比较直观的实现是：对于训练过程，根据概率p生成一个与输入向量X大小相同的符合伯努利分布的向量mask（里面都是0和1），然后将X与mask相乘；对于测试过程，因为测试过程没有神经元失活，所以对于某一层，其在测试过程的输出会比在训练过程大很多，所以需要进行rescale，常见的做法就是将这一层的...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/22</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "深度学习">深度学习</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/ml-target-encoding.html" >
             
                 <span>机器学习比赛中常用的Target Encoding</span>
@@ -632,38 +662,11 @@ P(x_1,...,x...
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/coursera-ml-summary.html" >
-            
-                <span>Andrew Ng《machine learning》小结</span>
-        </a>
-        <div class="abstract-content">
-            <p>花了两周时间学完了吴恩达的机器学习课程，做完了所有作业。虽然编程作业大多是照着公式写代码，框架都给你搭好，几乎是保姆式的服务，但还是或多或少有所收获。因为有点基础，所以看得比较快，十一周的课程只花了两周的时间。总的来说还是值得一看，涉及到了很多方面，在此做个小结。<br>
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/01</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "coursera">coursera</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
+    
+    <nav class="page-nav">
+        <span class="page-number current">1</span><a class="page-number" href="/categories/机器学习/page/2/">2</a><a class="extend next" rel="next" href="/categories/机器学习/page/2/">NEXT &#62;</a>
+    </nav>
     
 </main>
             <!-- profile -->
@@ -939,9 +942,20 @@ P(x_1,...,x...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 19
+        Total : 20
         </div>
         <!-- search  -->
         
@@ -954,6 +968,11 @@ P(x_1,...,x...
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/22</span><a class="archive-post-title" href= "/dropout-and-batch-normalization.html" >浅谈Dropout与Batch Normalization</a>
+        </li>
     
     
         <li class="archive-post-item">
@@ -1078,6 +1097,8 @@ P(x_1,...,x...
         <span class="sidebar-tag-name" data-tags="python"><span class="iconfont-archer">&#xe606;</span>python</span>
     
         <span class="sidebar-tag-name" data-tags="机器学习"><span class="iconfont-archer">&#xe606;</span>机器学习</span>
+    
+        <span class="sidebar-tag-name" data-tags="深度学习"><span class="iconfont-archer">&#xe606;</span>深度学习</span>
     
         <span class="sidebar-tag-name" data-tags="背包问题"><span class="iconfont-archer">&#xe606;</span>背包问题</span>
     
