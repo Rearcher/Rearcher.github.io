@@ -447,7 +447,7 @@ s.t. \quad & \sum_{i=1}^N \alpha_i y_i = 0 \\
 \end{aligned}</script><h2 id="软间隔最大化"><a href="#软间隔最大化" class="headerlink" title="软间隔最大化"></a>软间隔最大化</h2><p>某些样本点无法满足函数间隔大于等于1的约束条件，此时可以引入松弛变量$\xi$，这样约束条件就变为$y_i(w \cdot x_i + b) \geq 1 - \xi_i$，同时对每个松弛变量$\xi_i$需要支付一定的代价，求解软间隔最大化就变成下述凸二次规划问题：</p>
 <script type="math/tex; mode=display">\begin{aligned}
 \min_{w,b,\xi} \quad & \frac{1}{2} \|w\|^2 + C \sum_{i=1}^N \xi_i \\
-s.t. \quad & y_i(w \cdot x_i = b) \geq 1 - \xi_i, \quad i = 1,2,\cdots,N \\
+s.t. \quad & y_i(w \cdot x_i + b) \geq 1 - \xi_i, \quad i = 1,2,\cdots,N \\
 & \xi_i \geq 0, \quad i = 1,2,\cdots,N
 \end{aligned}</script><p>可以采取相同的方式，转化为对偶问题来求解（先列出其拉格朗日方程，使其极小化，分别对$w$、$b$、$\xi_i$求偏导，使它们的偏导为0，然后代入拉格朗日方程，再使其极大化，然后转换成凸二次规划问题，就得到了下面的形式）：</p>
 <script type="math/tex; mode=display">\begin{aligned}
@@ -839,9 +839,22 @@ top:50vh;
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -854,6 +867,11 @@ top:50vh;
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/l1-l2-regularization.html" >L1与L2正则化</a>
+        </li>
     
     
         <li class="archive-post-item">

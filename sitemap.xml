@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://rearcher.github.io/svm-implemented-in-python.html</loc>
+    
+    <lastmod>2019-03-25T14:36:27.307Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://rearcher.github.io/svm-fundamentals.html</loc>
+    
+    <lastmod>2019-03-25T14:35:34.574Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://rearcher.github.io/l1-l2-regularization.html</loc>
+    
+    <lastmod>2019-03-25T14:33:57.673Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://rearcher.github.io/dropout-and-batch-normalization.html</loc>
     
     <lastmod>2019-03-22T14:53:45.564Z</lastmod>
@@ -26,20 +47,6 @@
     <loc>https://rearcher.github.io/decision-tree.html</loc>
     
     <lastmod>2019-02-12T10:32:43.942Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://rearcher.github.io/svm-fundamentals.html</loc>
-    
-    <lastmod>2018-12-29T16:01:46.749Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://rearcher.github.io/svm-implemented-in-python.html</loc>
-    
-    <lastmod>2018-12-29T15:59:06.593Z</lastmod>
     
   </url>
   

@@ -4,6 +4,68 @@
 
     
   <url>
+    <loc>https://rearcher.github.io/svm-implemented-in-python.html</loc>
+    <lastmod>2019-03-25T14:36:27.307Z</lastmod>
+    <data>
+        <display>
+        <title>用python实现支持向量机</title>
+        <pubTime>2018-12-29T14:55:24.000Z</pubTime>
+        
+        <tag>python</tag>
+         
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://rearcher.github.io/svm-fundamentals.html</loc>
+    <lastmod>2019-03-25T14:35:34.574Z</lastmod>
+    <data>
+        <display>
+        <title>支持向量机原理整理</title>
+        <pubTime>2018-12-28T06:28:32.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://rearcher.github.io/l1-l2-regularization.html</loc>
+    <lastmod>2019-03-25T14:33:57.673Z</lastmod>
+    <data>
+        <display>
+        <title>L1与L2正则化</title>
+        <pubTime>2019-03-25T14:25:31.000Z</pubTime>
+        
+        <tag>机器学习</tag>
+         
+         
+           
+             
+              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://rearcher.github.io/dropout-and-batch-normalization.html</loc>
     <lastmod>2019-03-22T14:53:45.564Z</lastmod>
     <data>
@@ -72,48 +134,6 @@
         <display>
         <title>用python实现决策树</title>
         <pubTime>2018-12-14T14:57:21.000Z</pubTime>
-        
-        <tag>python</tag>
-         
-        <tag>机器学习</tag>
-         
-         
-           
-             
-              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://rearcher.github.io/svm-fundamentals.html</loc>
-    <lastmod>2018-12-29T16:01:46.749Z</lastmod>
-    <data>
-        <display>
-        <title>支持向量机原理整理</title>
-        <pubTime>2018-12-28T06:28:32.000Z</pubTime>
-        
-        <tag>机器学习</tag>
-         
-         
-           
-             
-              <breadCrumb title="机器学习" url="https://rearcher.github.io/categories/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-          
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://rearcher.github.io/svm-implemented-in-python.html</loc>
-    <lastmod>2018-12-29T15:59:06.593Z</lastmod>
-    <data>
-        <display>
-        <title>用python实现支持向量机</title>
-        <pubTime>2018-12-29T14:55:24.000Z</pubTime>
         
         <tag>python</tag>
          

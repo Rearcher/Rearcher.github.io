@@ -354,6 +354,39 @@ height:50vh;
     
     
     <article class="index-post">
+        <a class="abstract-title" href = "/l1-l2-regularization.html" >
+            
+                <span>L1与L2正则化</span>
+        </a>
+        <div class="abstract-content">
+            正则化（Regularization）是机器学习中常用的技术，它可以控制模型的复杂度，减少模型的过拟合。最基本的正则化方法是在代价函数中添加对参数$w$的惩罚项：
+\tilde{J}(w; X, y) = J(w; X, y) + \alpha\Omega(w)其中$J(w; X, y)$是原来的代价函数，$\alpha\Omega(w)$是正则化添加的惩罚项。比较常见的$\Omega(w)$函数有$L_1$范数和$L_2$范数，即：
+\begin{gathered}
+L_1: \Omega(w) = \|w\|_1 = \sum_i |w_i| \\
+L_2: \Omega(w) = ...
+        </div>
+        <div class="abstract-post-meta">
+            <!-- date  -->
+            <div class="abstract-date">
+                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2019/03/25</span>
+            </div>
+            <!-- tags  -->
+            
+            <div class= abstract-tags >
+    
+        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
+    
+</div>
+            
+        </div>
+    </article>
+    
+    
+    
+    
+    
+    
+    <article class="index-post">
         <a class="abstract-title" href = "/dropout-and-batch-normalization.html" >
             
                 <span>浅谈Dropout与Batch Normalization</span>
@@ -652,44 +685,10 @@ sign(x) = \begin{cases} +1, x \geq 0 \\ -1, x < 0 \end{cases}
         </div>
     </article>
     
-    
-    
-    
-    
-    
-    <article class="index-post">
-        <a class="abstract-title" href = "/naive_bayes.html" >
-            
-                <span>用python实现朴素贝叶斯分类算法</span>
-        </a>
-        <div class="abstract-content">
-            简介朴素贝叶斯算法主要用于分类问题，原理十分简单，主要采用后验概率最大化的方法来判定测试样本的类别。对于某个给定的测试样本$ x = \{x_1,…,x_n\} $，其类别为$y$的概率可以通过贝叶斯公式计算：
-P(y|x_1,...,x_n) = \frac{P(y)P(x_1,...,x_n|y)}{P(x_1,...,x_n)}其中$P(y)$是类别$y$的先验概率，$P(x_1,…,x_n|y)$是条件概率。后验概率最大化就是找出能够使得$P(y|x_1,…,x_n)$最大的类别$y$。
-由于朴素贝叶斯算法假设各个特征之间相互独立，所以可以得到下面的公式：
-P(x_1,...,x...
-        </div>
-        <div class="abstract-post-meta">
-            <!-- date  -->
-            <div class="abstract-date">
-                <span class="abstract-calander iconfont-archer">&#xe676;</span><span class="abstract-time">2018/04/24</span>
-            </div>
-            <!-- tags  -->
-            
-            <div class= abstract-tags >
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "python">python</a>
-    
-        <a class="post-tag" href="javascript:void(0);" data-tags = "机器学习">机器学习</a>
-    
-</div>
-            
-        </div>
-    </article>
-    
     <!-- paginator  -->
     
     <nav class="page-nav">
-        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
+        <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/">NEXT &#62;</a>
     </nav>
     
 </main>
@@ -1024,9 +1023,22 @@ P(x_1,...,x...
     
     
     
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     <div class="total-and-search">
         <div class="total-archive">
-        Total : 20
+        Total : 21
         </div>
         <!-- search  -->
         
@@ -1039,6 +1051,11 @@ P(x_1,...,x...
     
     <div class="archive-year"> 2019 </div>
     <ul class="year-list">
+    
+    
+        <li class="archive-post-item">
+            <span class="archive-post-date">03/25</span><a class="archive-post-title" href= "/l1-l2-regularization.html" >L1与L2正则化</a>
+        </li>
     
     
         <li class="archive-post-item">
