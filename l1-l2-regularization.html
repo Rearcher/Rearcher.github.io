@@ -267,7 +267,7 @@ height:50vh;
                 
                 
                     <div class="post-intro-read">
-                        <span>Word count: <span class="post-count">1,042</span> / Reading time: <span class="post-count">4 min</span></span>
+                        <span>Word count: <span class="post-count">1,510</span> / Reading time: <span class="post-count">6 min</span></span>
                     </div>
                 
                 <div class="post-intro-meta">
@@ -427,7 +427,15 @@ L(w, \alpha) = J(w; X, y) + \alpha(\|w\|_2^2 - C)
 <li>$L_2$正则化可以通过假设$w$服从正态分布，由最大后验概率导出</li>
 </ul>
 <h2 id="L-1-、-L-2-正则化的效果"><a href="#L-1-、-L-2-正则化的效果" class="headerlink" title="$L_1$、$L_2$正则化的效果"></a>$L_1$、$L_2$正则化的效果</h2><h3 id="直观理解"><a href="#直观理解" class="headerlink" title="直观理解"></a>直观理解</h3><p>为了简化，假设参数向量$w$只有两个分量，$w_1$和$w_2$，并且原始的代价函数是平方误差和。将$w_1$和$w_2$作为坐标轴，可以画出$L_1$范数、$L_2$范数、原始平方误差的等值线。带$L_1$或者$L_2$正则项的目标函数的解就是平方误差项等值线与范数等值线的交点。<br><img src="https://ws1.sinaimg.cn/large/006b3mDlly1g1fet544hcj30jg0hs75d.jpg" alt="regularization"><br>从上图可以看出，$L_1$范数的等值线与平方误差项等值线的交点有较大几率出现在坐标轴上，对应于某个$w_i$为0；而$L_2$范数的等值线与平方误差项等值线的交点有较大几率出现在某个象限中，即$w_i$均不为0。因此$L_1$范数更容易得到稀疏解，而$L_2$范数会让$w_i$都趋向于0。</p>
-<h3 id="理论分析"><a href="#理论分析" class="headerlink" title="理论分析"></a>理论分析</h3><p>待完善。</p>
+<h3 id="理论分析"><a href="#理论分析" class="headerlink" title="理论分析"></a>理论分析</h3><p>假设原目标函数$J(w)$的最优解是$w^\star$，并且二阶可导，则将$J(w)$在$w^\star$进行二阶泰勒展开：</p>
+<script type="math/tex; mode=display">\hat{J}(w) = J(w^\star) + \frac{1}{2}(w - w^\star)^T H(w - w^\star)</script><p>式中H为$J(w)$在$w^\star$处的Hessian矩阵，因为$w^\star$是$J(w)$的最优解，所以其一阶导数为0，所以上式子不含一阶项。当$\hat{J}(w)$取得最小值时，有：</p>
+<script type="math/tex; mode=display">\nabla_w \hat{J}(w) = H(w - w^\star) = 0</script><p>下面分别讨论加入$L_1$和$L_2$正则化时的情况。</p>
+<p><strong>对于$L_1$正则化，有：</strong></p>
+<script type="math/tex; mode=display">\nabla_w \tilde{J}(w) = \nabla_w \hat{J}(w) + \nabla_w \Omega(w) = H(w - w^\star) + \alpha sign(w)</script><p>其最优解满足$H(\tilde{w} - w^\star) + \alpha sign(\tilde{w}) = 0$。假设$H$为对角矩阵，即$H = diag[H_{11}, H_{22},…, H_{nn}], H_{jj} &gt; 0$。此时$w$的不同分量之间没有相关性，$\tilde{w}$的解为：</p>
+<script type="math/tex; mode=display">\tilde{w}_j = sign(w_j^\star) \max \left\{ |w_j^\star| - \frac{\alpha}{H_{jj}}, 0 \right\}</script><p>当$|w_j^\star| \leq \frac{\alpha}{H_{jj}}$时，可知$\tilde{w}_j = 0$，因此$L_1$正则化会使最优解的某些元素为0，从而产生稀疏性；当$|w_j^\star| &gt; \frac{\alpha}{H_{jj}}$时，$\tilde{w}_j$会在原有最优解上偏移一个常数值。</p>
+<p><strong>对于$L_2$正则化，有：</strong></p>
+<script type="math/tex; mode=display">\nabla_w \tilde{J}(w) = \nabla_w \hat{J}(w) + \nabla_w \Omega(w) = H(w - w^\star) + \alpha w</script><p>设其最优解为$\tilde{w}$，则$H(\tilde{w} - w^\star) + \alpha \tilde{w} = 0$，即$\tilde{w} = (H + \alpha I)^{-1} H w^\star$。由于H是对称矩阵，可对其做特征值分解，即$H = Q \Lambda Q^T$，其中$Q$为正交矩阵，且每一列为$H$的特征向量，代入$\tilde{w}$的表达式可得：$\tilde{w} = Q(\Lambda + \alpha I)^{-1} \Lambda Q^T w^\star$，其中$\Lambda$为对角矩阵，且对角线元素为$H$的特征值$\lambda_j$。</p>
+<p>$w^\star$可在$Q$为正交基上作线性展开，并且$\tilde{w}$为$w^\star$在$H$的每个特征向量上的分量以$\frac{\lambda_j}{\lambda_j + \alpha}$比例缩放得到。若$\lambda_j \gg \alpha$，则$w_j^\star$受正则化的影响较小；若$\lambda_j \ll \alpha$，则$w_j^\star$受正则化影响较大，将收缩到接近于0的值。同时，若$w_j^\star \ne 0$，则$\tilde{w}_j \ne 0$，因此不会产生稀疏解的效果。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ul>
 <li><a href="https://www.cnblogs.com/heguanyou/p/7688344.html" target="_blank" rel="noopener">拉普拉斯先验与L1正则化</a></li>
 <li><a href="https://www.cnblogs.com/heguanyou/p/7582578.html" target="_blank" rel="noopener">L1正则化及其推导</a></li>
@@ -570,6 +578,8 @@ top:50vh;
     <div class="sidebar-content sidebar-content-show-archive">
           <div class="sidebar-panel-archives">
     <!-- 在ejs中将archive按照时间排序 -->
+    
+    
     
     
     
@@ -961,11 +971,11 @@ top:50vh;
     
         <span class="sidebar-tag-name" data-tags="机器学习"><span class="iconfont-archer">&#xe606;</span>机器学习</span>
     
-        <span class="sidebar-tag-name" data-tags="深度学习"><span class="iconfont-archer">&#xe606;</span>深度学习</span>
-    
         <span class="sidebar-tag-name" data-tags="背包问题"><span class="iconfont-archer">&#xe606;</span>背包问题</span>
     
         <span class="sidebar-tag-name" data-tags="动态规划"><span class="iconfont-archer">&#xe606;</span>动态规划</span>
+    
+        <span class="sidebar-tag-name" data-tags="深度学习"><span class="iconfont-archer">&#xe606;</span>深度学习</span>
     
         <span class="sidebar-tag-name" data-tags="go"><span class="iconfont-archer">&#xe606;</span>go</span>
     
